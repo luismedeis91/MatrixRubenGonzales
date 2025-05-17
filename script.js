@@ -76,4 +76,55 @@ document.getElementById("forms").addEventListener("submit", function (event) {
   document.getElementById("mensagem").textContent = "Estacionamento cheio!";
 });
 
+
+let hora = 10;
+let minuto = 0;
+let segundo = 0;
+
+function atualizarRelogio() {
+  segundo++;
+  if (segundo >= 60) {
+    segundo = 0;
+    minuto++;
+    if (minuto >= 60) {
+      minuto = 0;
+      hora++;
+      if (hora >= 24) hora = 0;
+    }
+  }
+
+  const format = (n) => n.toString().padStart(2, '0');
+  document.getElementById("relogio").textContent = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
+}
+
+setInterval(atualizarRelogio, 1000);
+
+function avancarTempo(min) {
+  minuto += min;
+  while (minuto >= 60) {
+    minuto -= 60;
+    hora++;
+    if (hora >= 24) hora = 0;
+  }
+  atualizarRelogio();
+}
+
+function ocuparVaga(td, placa) {
+  td.classList.add("vaga-ocupada");
+  const div = document.createElement("div");
+  div.className = "carro";
+  div.innerHTML = `<i class="fas fa-car"></i>${placa}`;
+  td.innerHTML = "";
+  td.appendChild(div);
+
+  const format = (n) => n.toString().padStart(2, '0');
+  const horaEntrada = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
+  td.setAttribute("data-hora", `Entrada: ${horaEntrada}`);
+}
+
+
+
+
+
+
 window.onload = criarMatriz;
