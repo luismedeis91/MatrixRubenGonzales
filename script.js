@@ -45,8 +45,13 @@ function criarCarro(placa, horario) {
   const texto = document.createElement("span");
   texto.textContent = placa;
 
+  const horarioTexto = document.createElement("span");
+  horarioTexto.classList.add("horario");
+  horarioTexto.textContent = `${horario}`;
+
   carro.appendChild(icone);
   carro.appendChild(texto);
+  carro.appendChild(horarioTexto);
   return carro;
 }
 
@@ -82,6 +87,21 @@ function atualizarRelogio() {
 
   const format = (n) => n.toString().padStart(2, '0');
   document.getElementById("relogio").textContent = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
+
+  atualizarRelogioEmCarros();
+}
+
+function atualizarRelogioEmCarros() {
+  const celulas = document.querySelectorAll("#matriz_vagas td");
+  for(let celula of celulas) {
+    if(celula.dataset.livre === "false") {
+      const carro = celula.querySelector(".carro");
+      const carroTime = celula.querySelector(".horario");
+      
+      const format = (n) => n.toString().padStart(2, '0');
+      carroTime.textContent = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
+    }
+  }
 }
 
 setInterval(atualizarRelogio, 1000);
