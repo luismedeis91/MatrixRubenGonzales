@@ -281,7 +281,50 @@ footer {
   background-color: #0056b3;
 }
 
+.hidden {
+  display: none;
+}
 
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 2px solid #444;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+}
+
+.popup-content {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.popupRepetido {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 2px solid #444;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+  
+}
+
+.popup-contentRepetido {
+  text-align: center;
+  top: -30px;
+  backdrop-filter: blur(6px);
+}
 
 
 

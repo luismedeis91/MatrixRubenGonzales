@@ -2,6 +2,9 @@ const linhas = 5;
 const colunas = 5;
 const tabela = document.getElementById("matriz_vagas");
 
+let popupCelulaAtiva = null;
+let popupPlacaAtiva = null;
+
 // Cria a matriz de vagas
 function criarMatriz() {
   for (let i = 0; i < linhas; i++) {
@@ -31,7 +34,7 @@ function criarCarro(placa, horario) {
 
   const iconesCarros = [
     "fa-car", "fa-car-side", "fa-taxi", "fa-bus",
-    "fa-shuttle-van", "fa-truck-pickup", "fa-truck", 
+    "fa-shuttle-van", "fa-truck-pickup", "fa-truck",
     "fa-ambulance", "fa-motorcycle"
   ];
   const iconeAleatorio = iconesCarros[Math.floor(Math.random() * iconesCarros.length)];
@@ -47,17 +50,17 @@ function criarCarro(placa, horario) {
   return carro;
 }
 
-function EvitarDuplas(placa) {
+function placaJaExiste(placa) {
   const celulas = document.querySelectorAll("#matriz_vagas td");
   for (let celula of celulas) {
     if (celula.dataset.livre === "false") {
       const carro = celula.querySelector(".carro span");
       if (carro && carro.textContent.trim() === placa) {
-        return false;
+        return true;
       }
     }
   }
-  return true;
+  return false;
 }
 
 // Relógio
@@ -83,7 +86,6 @@ function atualizarRelogio() {
 
 setInterval(atualizarRelogio, 1000);
 
-// Avança o tempo em minutos
 function avancarTempo(min) {
   minuto += min;
   while (minuto >= 60) {
@@ -94,15 +96,19 @@ function avancarTempo(min) {
   atualizarRelogio();
 }
 
-// Evento de envio do formulário
 document.getElementById("forms").addEventListener("submit", function (event) {
   event.preventDefault();
 
   const placa = document.getElementById("placa").value.trim().toUpperCase();
   if (!placa) return;
 
-  if (!EvitarDuplas(placa)) {
-    document.getElementById("mensagem").textContent = `A placa ${placa} já está estacionada!`;
+  if (placaJaExiste(placa)) {
+document.getElementById("popup-textRepetido").innerHTML = `
+  <strong> Placa duplicada detectada!</strong><br><br>
+  Não é permitido estacionar dois automóveis com a mesma placa.<br>
+  <em>"Parece que alguém quer arrumar problemas com a lei."</em><br>
+  — <strong>Perna Longa</strong>, <em>Looney Tunes</em>
+`;    document.getElementById("popupRepetido").classList.remove("hidden");
     return;
   }
 
@@ -123,13 +129,34 @@ document.getElementById("forms").addEventListener("submit", function (event) {
 
   document.getElementById("mensagem").textContent = `Carro com placa ${placa} estacionado às ${horario}.`;
   document.getElementById("placa").value = "";
-vagaAleatoria.onclick = function () {
-    alert(`Carro com placa ${placa} entrou às ${horario}`);
-}
 
+  vagaAleatoria.onclick = function () {
+    popupCelulaAtiva = vagaAleatoria;
+    popupPlacaAtiva = placa;
 
-  
+    document.getElementById("popup-text").textContent = `Carro com placa ${placa} entrou às ${horario}`;
+    document.getElementById("popup").classList.remove("hidden");
+  };
 });
 
-// Inicializa a matriz ao carregar a página
-window.onload = criarMatriz;
+window.onload = function () {
+  criarMatriz();
+
+  document.getElementById("btn-fechar").onclick = () => {
+    document.getElementById("popup").classList.add("hidden");
+  };
+
+  document.getElementById("btn-retirar").onclick = () => {
+    if (popupCelulaAtiva) {
+      popupCelulaAtiva.dataset.livre = "true";
+      popupCelulaAtiva.innerHTML = "";
+      document.getElementById("popup").classList.add("hidden");
+      document.getElementById("mensagem").textContent = `Carro com placa ${popupPlacaAtiva} foi retirado.`;
+      popupCelulaAtiva = null;
+      popupPlacaAtiva = null;
+    }
+  };
+ document.getElementById("btn-fecharRepetido").onclick = () => {
+    document.getElementById("popupRepetido").classList.add("hidden");
+};
+};
