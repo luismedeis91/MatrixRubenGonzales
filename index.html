@@ -2,17 +2,29 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MatrixRubenGonzales</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
 <body>
 
+    <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <p id="popup-text"></p>
+            <button id="btn-retirar">Retirar</button>
+            <button id="btn-fechar">Fechar</button>
+        </div>
+    </div>
+    <div id="popupRepetido" class="popup hidden">
+        <div class="popup-contentRepetido">
+            <p id="popup-textRepetido"></p>
+            <button id="btn-fecharRepetido">Fechar</button>
+        </div>
+    </div>
 
 
 
@@ -27,9 +39,19 @@
     </header>
 
     <main>
+        <div id="relogio-container">
+            <div id="relogio">10:00:00</div>
+            <div>
+                <button onclick="avancarTempo(15)">+15 min</button>
+                <button onclick="avancarTempo(30)">+30 min</button>
+                <button onclick="avancarTempo(60)">+1h</button>
+            </div>
+        </div>
+
+
         <form id="forms">
             <label for="placa">Placa do automóvel</label>
-            <input type="text" id="placa" maxlength="8" placeholder="ABCDE" required>
+            <input type="text" id="placa" maxlength="8" placeholder="ABCDE" required />
             <button type="submit">Estacionar</button>
         </form>
 
