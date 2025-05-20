@@ -5,7 +5,6 @@ const tabela = document.getElementById("matriz_vagas");
 let popupCelulaAtiva = null;
 let popupPlacaAtiva = null;
 
-// Cria a matriz de vagas
 function criarMatriz() {
   for (let i = 0; i < linhas; i++) {
     const linha = document.createElement("tr");
@@ -68,7 +67,6 @@ function placaJaExiste(placa) {
   return false;
 }
 
-// Relógio
 let hora = 10;
 let minuto = 0;
 let segundo = 0;
@@ -93,11 +91,9 @@ function atualizarRelogio() {
 
 function atualizarRelogioEmCarros() {
   const celulas = document.querySelectorAll("#matriz_vagas td");
-  for(let celula of celulas) {
-    if(celula.dataset.livre === "false") {
-      const carro = celula.querySelector(".carro");
+  for (let celula of celulas) {
+    if (celula.dataset.livre === "false") {
       const carroTime = celula.querySelector(".horario");
-      
       const format = (n) => n.toString().padStart(2, '0');
       carroTime.textContent = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
     }
@@ -123,12 +119,13 @@ document.getElementById("forms").addEventListener("submit", function (event) {
   if (!placa) return;
 
   if (placaJaExiste(placa)) {
-document.getElementById("popup-textRepetido").innerHTML = `
-  <strong> Placa duplicada detectada!</strong><br><br>
-  Não é permitido estacionar dois automóveis com a mesma placa.<br>
-  <em>"Parece que alguém quer arrumar problemas com a lei."</em><br>
-  — <strong>Perna Longa</strong>, <em>Looney Tunes</em>
-`;    document.getElementById("popupRepetido").classList.remove("hidden");
+    document.getElementById("popup-textRepetido").innerHTML = `
+      <strong> Placa duplicada detectada!</strong><br><br>
+      Não é permitido estacionar dois automóveis com a mesma placa.<br>
+      <em>"Parece que alguém quer arrumar problemas com a lei."</em><br>
+      — <strong>Perna Longa</strong>, <em>Looney Tunes</em>
+    `;
+    document.getElementById("popupRepetido").classList.remove("hidden");
     return;
   }
 
@@ -144,6 +141,7 @@ document.getElementById("popup-textRepetido").innerHTML = `
   const horario = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
 
   vagaAleatoria.dataset.livre = "false";
+  vagaAleatoria.dataset.horaEntrada = horario;
   vagaAleatoria.innerHTML = "";
   vagaAleatoria.appendChild(criarCarro(placa, horario));
 
@@ -151,10 +149,34 @@ document.getElementById("popup-textRepetido").innerHTML = `
   document.getElementById("placa").value = "";
 
   vagaAleatoria.onclick = function () {
-    popupCelulaAtiva = vagaAleatoria;
-    popupPlacaAtiva = placa;
+    const entradaStr = this.dataset.horaEntrada;
+    const [h, m, s] = entradaStr.split(":").map(Number);
+    const entrada = new Date();
+    entrada.setHours(h, m, s, 0);
 
-    document.getElementById("popup-text").textContent = `Carro com placa ${placa} entrou às ${horario}`;
+    const agora = new Date();
+    agora.setHours(hora, minuto, segundo, 0);
+
+    const diffMs = agora - entrada;
+    const diffMin = Math.floor(diffMs / 60000);
+
+    let preco = 0;
+    if (diffMin > 15) {
+      const horas = diffMin / 60;
+      const horasCobradas = Math.ceil(horas);
+      preco = 10 + Math.max(0, (horasCobradas - 1)) * 2;
+    }
+
+    const placaDoCarro = this.querySelector(".carro span").textContent;
+
+    popupCelulaAtiva = this;
+    popupPlacaAtiva = placaDoCarro;
+
+    document.getElementById("popup-text").innerHTML =
+      `Carro com placa <strong>${placaDoCarro}</strong> entrou às ${entradaStr}<br>
+      Tempo estacionado: <strong>${diffMin} minutos</strong><br>
+      Valor a pagar: <strong>R$ ${preco.toFixed(2)}</strong>`;
+
     document.getElementById("popup").classList.remove("hidden");
   };
 });
@@ -176,7 +198,8 @@ window.onload = function () {
       popupPlacaAtiva = null;
     }
   };
- document.getElementById("btn-fecharRepetido").onclick = () => {
+
+  document.getElementById("btn-fecharRepetido").onclick = () => {
     document.getElementById("popupRepetido").classList.add("hidden");
-};
+  };
 };
