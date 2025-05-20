@@ -1,9 +1,32 @@
-const linhas = 5;
-const colunas = 5;
-const tabela = document.getElementById("matriz_vagas");
-
+let linhas = 5;
+let colunas = 5;
+let tabela;
 let popupCelulaAtiva = null;
 let popupPlacaAtiva = null;
+
+window.onload = function () {
+  tabela = document.getElementById("matriz_vagas");
+  criarMatriz();
+
+  document.getElementById("btn-fechar").onclick = () => {
+    document.getElementById("popup").classList.add("hidden");
+  };
+
+  document.getElementById("btn-retirar").onclick = () => {
+    if (popupCelulaAtiva) {
+      popupCelulaAtiva.dataset.livre = "true";
+      popupCelulaAtiva.innerHTML = "";
+      document.getElementById("popup").classList.add("hidden");
+      document.getElementById("mensagem").textContent = `Carro com placa ${popupPlacaAtiva} foi retirado.`;
+      popupCelulaAtiva = null;
+      popupPlacaAtiva = null;
+    }
+  };
+
+  document.getElementById("btn-fecharRepetido").onclick = () => {
+    document.getElementById("popupRepetido").classList.add("hidden");
+  };
+};
 
 function criarMatriz() {
   for (let i = 0; i < linhas; i++) {
@@ -180,26 +203,3 @@ document.getElementById("forms").addEventListener("submit", function (event) {
     document.getElementById("popup").classList.remove("hidden");
   };
 });
-
-window.onload = function () {
-  criarMatriz();
-
-  document.getElementById("btn-fechar").onclick = () => {
-    document.getElementById("popup").classList.add("hidden");
-  };
-
-  document.getElementById("btn-retirar").onclick = () => {
-    if (popupCelulaAtiva) {
-      popupCelulaAtiva.dataset.livre = "true";
-      popupCelulaAtiva.innerHTML = "";
-      document.getElementById("popup").classList.add("hidden");
-      document.getElementById("mensagem").textContent = `Carro com placa ${popupPlacaAtiva} foi retirado.`;
-      popupCelulaAtiva = null;
-      popupPlacaAtiva = null;
-    }
-  };
-
-  document.getElementById("btn-fecharRepetido").onclick = () => {
-    document.getElementById("popupRepetido").classList.add("hidden");
-  };
-};
