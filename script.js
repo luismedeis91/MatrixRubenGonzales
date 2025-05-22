@@ -9,6 +9,14 @@ let hora = 10;
 let minuto = 0;
 let segundo = 0;
 
+let horaGlobal = 0;
+let minutoGlobal = 0;
+let segundoGlobal = 0;
+
+let horaEntrada = [];
+let minutoEntrada = [];
+let segundoEntrada = [];
+
 window.onload = function () {
   tabela = document.getElementById("matriz_vagas");
   criarMatriz();
@@ -105,8 +113,37 @@ function atualizarRelogio() {
     }
   }
 
+  atualizarRelogioGlobal();
+
   const format = (n) => n.toString().padStart(2, '0');
   document.getElementById("relogio").textContent = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
+}
+
+function atualizarRelogioGlobal() {
+  segundoGlobal++;
+  if (segundoGlobal >= 60) {
+    segundoGlobal = 0;
+    minutoGlobal++;
+    if (minutoGlobal >= 60) {
+      minutoGlobal = 0;
+      horaGlobal++;
+    }
+  }
+  
+  atualizarRelogioEmCarros();
+}
+
+function atualizarRelogioEmCarros() {
+  const celulas = document.querySelectorAll("#matriz_vagas td");
+  for(let celula of celulas) {
+    if(celula.dataset.livre === "false") {
+      const carro = celula.querySelector(".carro");
+      const carroTime = celula.querySelector(".horario");
+      
+      const format = (n) => n.toString().padStart(2, '0');
+      carroTime.textContent = `${format(horaGlobal)}:${format(minutoGlobal)}:${format(segundoGlobal)}`;
+    }
+  }
 }
 
 setInterval(atualizarRelogio, 1000);
