@@ -11,15 +11,18 @@
 </head>
 
 <body>
-
-
     <div id="popupPrecos" class="popup hidden">
         <div class="popup-contentPrecos">
-            <p id="popup-textPrecos"></p>
             <button id="btn-fecharPrecos">Fechar</button>
+            <h2>Histórico de Saídas</h2>
+            <ul id="historico">
+            </ul>
+            <hr />
+            <p style="text-align: right; font-weight: bold; margin-top: 10px; font-size: 1.1em;">
+                Valor Total Acumulado: <span id="valorTotalHistorico">R$ 0.00</span>
+            </p>
         </div>
     </div>
-    <button id="btn-verHistorico">Ver Histórico</button>
 
     <div id="popup" class="popup hidden">
         <div class="popup-content">
@@ -28,6 +31,7 @@
             <button id="btn-fechar">Fechar</button>
         </div>
     </div>
+
     <div id="popupRepetido" class="popup hidden">
         <div class="popup-contentRepetido">
             <p id="popup-textRepetido"></p>
@@ -35,17 +39,6 @@
         </div>
     </div>
 
-    <div id="popup" class="hidden">
-        <div id="popup-text"></div>
-        <button id="btn-retirar">Retirar</button>
-        <button id="btn-fechar">Fechar</button>
-    </div>
-
-    <!-- Popup para placas repetidas -->
-    <div id="popupRepetido" class="hidden">
-        <div id="popup-textRepetido"></div>
-        <button id="btn-fecharRepetido">Fechar</button>
-    </div>
     <header>
         <section class="apresentacao">
             <section class="nome_Projeto">
@@ -66,16 +59,22 @@
             </div>
         </div>
 
-
         <form id="forms">
             <label for="placa">Placa do automóvel</label>
             <input type="text" id="placa" maxlength="8" placeholder="ABCDE" required />
             <button type="submit">Estacionar</button>
         </form>
 
-        <div id="mensagem"></div>
-        <h2>Matriz de Vagas</h2>
-        <table id="matriz_vagas" class="animate__animate animate__fadeInUp"></table>
+        <div class="controls-and-matrix-container">
+            <div class="controls-left">
+                <button id="btn-verHistorico">Ver Histórico</button>
+            </div>
+            <div class="matrix-section">
+                <div id="mensagem"></div>
+                <h2>Matriz de Vagas</h2>
+                <table id="matriz_vagas" class="animate__animate animate__fadeInUp"></table>
+            </div>
+        </div>
     </main>
 
     <footer></footer>
