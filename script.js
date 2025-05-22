@@ -81,7 +81,7 @@ function atualizarRelogio() {
     if (minuto >= 60) {
       minuto = 0;
       hora++;
-      if (hora >= 24) hora = 0;
+      if (hora >= 24) hora = 10;
     }
   }
 
@@ -111,7 +111,7 @@ function avancarTempo(min) {
   while (minuto >= 60) {
     minuto -= 60;
     hora++;
-    if (hora >= 24) hora = 0;
+    if (hora >= 24) hora = 10;
   }
   atualizarRelogio();
 }
