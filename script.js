@@ -1,5 +1,5 @@
 let linhas = 5;
-let colunas = 5;
+let colunas = 6;
 let tabela;
 let popupCelulaAtiva = null;
 let popupPlacaAtiva = null;
