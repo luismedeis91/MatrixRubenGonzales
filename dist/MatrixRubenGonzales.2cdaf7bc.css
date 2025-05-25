@@ -1,0 +1,366 @@
+@import "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap";
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f0f0f0;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Poppins, sans-serif;
+  font-weight: 400;
+  display: flex;
+}
+
+header {
+  background-color: #007bff;
+  width: 100%;
+  padding: 2vh 5vw;
+  box-shadow: 0 2px 6px #0000001a;
+}
+
+.nome_Projeto h1, .nome_Projeto strong {
+  vertical-align: middle;
+  margin: 0;
+  line-height: 1;
+}
+
+.apresentacao {
+  color: #fff;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1vw;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.nome_Projeto {
+  align-items: center;
+  gap: 1vw;
+  display: flex;
+}
+
+.apresentacao h1 {
+  font-size: 3vh;
+}
+
+.apresentacao strong {
+  font-size: 2vh;
+}
+
+.apresentacao a {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color .3s;
+}
+
+.apresentacao a:hover {
+  color: #cce0ff;
+}
+
+main {
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  padding: 5vh 5vw;
+  display: flex;
+}
+
+form {
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+  margin-bottom: 3vh;
+  display: flex;
+}
+
+label {
+  margin-bottom: .5vh;
+  font-weight: 600;
+}
+
+input {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 250px;
+  padding: 1.5vh 2vw;
+  font-size: 1.8vh;
+}
+
+button {
+  color: #fff;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  border-radius: 10px;
+  padding: 1.5vh 2vw;
+  font-size: 1.8vh;
+  transition: background-color .3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#mensagem {
+  text-align: center;
+  margin-top: 1vh;
+  font-size: 2vh;
+  font-weight: bold;
+}
+
+h1, h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 2vh;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 12px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 2vh;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  box-shadow: 0 5px 25px #0003;
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid #ccc;
+  width: 80px;
+  height: 80px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+td:after {
+  content: "";
+  border: 2px solid #bbb;
+  border-radius: 5px;
+  width: 40px;
+  height: 60px;
+  margin: 15px auto auto;
+  display: block;
+}
+
+td:hover {
+  cursor: pointer;
+  background-color: #3a3a3a;
+  transform: scale(1.05);
+}
+
+footer {
+  text-align: center;
+  background-color: #e0e0e0;
+  margin-top: auto;
+  padding: 2vh 0;
+  font-size: 1.6vh;
+}
+
+.vaga-ocupada {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.carro {
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  padding: 5px 5px 5px 10px;
+  font-size: 1.8vh;
+  font-weight: bold;
+  display: flex;
+}
+
+.carro i {
+  font-size: 2.5vh;
+}
+
+@keyframes breathing {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes aparecer {
+  0% {
+    opacity: 0;
+    transform: scale(.5)translateY(-20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1)translateY(0);
+  }
+}
+
+.breathing {
+  animation: 2s ease-in-out infinite breathing;
+}
+
+#relogio-container {
+  z-index: 10;
+  z-index: 1000;
+  flex-direction: column;
+  align-items: flex-end;
+  animation: 1s ease-in-out aparecer;
+  display: flex;
+  position: absolute;
+  top: 350px;
+  right: 90px;
+}
+
+#relogio {
+  color: #007bff;
+  background-color: #fff;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  padding: 12px 70px;
+  font-size: 3vh;
+  font-weight: bold;
+  transition: background-color .3s;
+  box-shadow: 0 0 10px #0003;
+}
+
+#relogio:hover {
+  background-color: #eef6ff;
+}
+
+#relogio-container button {
+  color: #fff;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  margin: 4px;
+  padding: 8px 14px;
+  font-size: 1.8vh;
+  transition: background-color .3s;
+}
+
+#relogio-container button:hover {
+  background-color: #0056b3;
+}
+
+.popup {
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+  background: #fff;
+  border: 2px solid #444;
+  padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #00000080;
+}
+
+.popup-content {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.popupRepetido {
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+  background: #fff;
+  border: 2px solid #444;
+  padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #00000080;
+}
+
+.popup-contentRepetido {
+  text-align: center;
+  backdrop-filter: blur(6px);
+  top: -30px;
+}
+
+.popup-contentPrecos {
+  background-color: #fefefe;
+  border: 1px solid #888;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  margin: 5% auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px #0003, 0 6px 20px #00000030;
+}
+
+.popup-contentPrecos h2 {
+  border-bottom: 1px solid #eee;
+  margin-top: 0;
+  padding-bottom: 10px;
+}
+
+.popup-contentPrecos hr {
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+#historico {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  max-height: 300px;
+  margin-bottom: 15px;
+  padding: 10px;
+  list-style-type: none;
+  overflow-y: auto;
+}
+
+#historico li {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 8px 5px;
+  font-size: .9em;
+}
+
+#historico li:last-child {
+  border-bottom: none;
+}
+
+#btn-fecharPrecos {
+  float: right;
+  cursor: pointer;
+  color: #fff;
+  background-color: #f44336;
+  border: none;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  font-size: .9em;
+}
+
+#btn-fecharPrecos:hover {
+  background-color: #d32f2f;
+}
+/*# sourceMappingURL=MatrixRubenGonzales.2cdaf7bc.css.map */
