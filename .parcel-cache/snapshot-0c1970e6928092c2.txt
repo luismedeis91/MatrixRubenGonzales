@@ -36,7 +36,7 @@
 102C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\lmdb\bin\download-prebuilds.js133926676015728256 0
 105C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\weak-lru-cache\tests\benchmark.js133926675985714489 0
 90C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\.package-lock.json133926677532359874 0
-63C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist133926679532076482 1
+63C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist133926680829905224 1
 91C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\ramda\es\forEach.js133926676045764522 0
 99C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\lightningcss-win32-x64-msvc133926675986163291 1
 103C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\vite\dist\node\module-runner.js133926676280027557 0
@@ -79,7 +79,7 @@
 112C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\full\instance\find-last-index.js133926676061810222 0
 131C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\caniuse-lite\data\features\mdn-text-decoration-shorthand.js133926676049040389 0
 95C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\stable\weak-map133926676078523565 1
-73C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\src\index.html133926679542528427 0
+73C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\src\index.html133926680822260919 0
 91C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\type-fest\base.d.ts133926675987350119 0
 72C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\src\script.js133926665309959963 0
 94C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\actual\atob.js133926676042981961 0
@@ -197,7 +197,7 @@
 93C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\dayjs\locale\ar-sa.js133926676031154668 0
 103C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\full\object\group-by.js133926676068462593 0
 90C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\dayjs\locale\mr.js133926676045714647 0
-95C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.44983732.js133926679531039254 0
+95C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.44983732.js133926680828685825 0
 91C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\ramda\es\indexOf.js133926676046981355 0
 114C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\@parcel\packager-js\lib\CJSOutputFormat.js133926676010597796 0
 113C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\cross-fetch\dist\react-native-polyfill.js133926676028252433 0
@@ -530,7 +530,7 @@
 112C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\features\typed-array\index-of.js133926676072441955 0
 103C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\es\iterator\for-each.js133926676065939338 0
 95C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\semver\ranges\subset.js133926676014591296 0
-95C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.da9dd64f.js133926679532006660 0
+95C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.da9dd64f.js133926680829805480 0
 83C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\esbuild\bin133926676278411884 1
 103C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\@parcel\transformer-postcss\lib133926676011714804 1
 112C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\@parcel\source-map\parcel_sourcemap_wasm133926676012383017 1
@@ -3027,7 +3027,7 @@
 109C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\features\reflect\construct.js133926676047444654 0
 110C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\dayjs\esm\plugin\isTomorrow\index.d.ts133926676051360621 0
 101C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\ramda\es\internal\_xfilter.js133926676039269959 0
-96C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.2cdaf7bc.css133926679531238721 0
+96C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.2cdaf7bc.css133926680828685825 0
 113C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\@babel\runtime\helpers\setFunctionName.js133926676042333704 0
 99C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\ramda\es\internal\_xfind.js133926676039344807 0
 90C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\stage\3.js133926676029000430 0
@@ -6473,7 +6473,7 @@
 116C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\features\string\virtual\pad-start.js133926676084175015 0
 116C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\caniuse-lite\data\features\battery-status.js133926675991966994 0
 113C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\features\string\virtual\repeat.js133926676085609970 0
-74C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\index.html133926679531757334 0
+74C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\index.html133926680829373975 0
 109C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\@swc\helpers\_\_await_async_generator133926676034166621 1
 113C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\features\string\virtual\strike.js133926676088173111 0
 113C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\core-js\features\string\virtual\substr.js133926676088701699 0
@@ -9269,6 +9269,6 @@
 85C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\.bin\uuid.cmd133926676094885835 0
 85C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\.bin\uuid.ps1133926676094875866 0
 85C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\node_modules\.bin\vite.ps1133926676286103967 0
-100C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.2cdaf7bc.css.map133926679531258665 0
-99C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.44983732.js.map133926679531129016 0
-99C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.da9dd64f.js.map133926679532076482 0
+100C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.2cdaf7bc.css.map133926680828705770 0
+99C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.44983732.js.map133926680828915217 0
+99C:\Users\Gustavo\Desktop\Html projects\MatrixRubenGonzales\dist\MatrixRubenGonzales.da9dd64f.js.map133926680829885270 0
