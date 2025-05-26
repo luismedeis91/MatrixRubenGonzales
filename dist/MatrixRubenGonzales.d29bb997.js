@@ -160,7 +160,7 @@
       });
     }
   }
-})({"7SvX3":[function(require,module,exports,__globalThis) {
+})({"lgxfO":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
@@ -682,68 +682,14 @@ let segundo = 0;
 let horaGlobal = 0;
 let minutoGlobal = 0;
 let segundoGlobal = 0;
-const data = [
-    {
-        hour: 10,
-        count: 0
-    },
-    {
-        hour: 11,
-        count: 0
-    },
-    {
-        hour: 12,
-        count: 0
-    },
-    {
-        hour: 13,
-        count: 0
-    },
-    {
-        hour: 14,
-        count: 0
-    },
-    {
-        hour: 15,
-        count: 0
-    },
-    {
-        hour: 16,
-        count: 0
-    },
-    {
-        hour: 17,
-        count: 0
-    },
-    {
-        hour: 18,
-        count: 0
-    },
-    {
-        hour: 19,
-        count: 0
-    },
-    {
-        hour: 20,
-        count: 0
-    },
-    {
-        hour: 21,
-        count: 0
-    },
-    {
-        hour: 22,
-        count: 0
-    },
-    {
-        hour: 23,
-        count: 0
-    },
-    {
-        hour: 24,
-        count: 0
-    }
-];
+// Estrutura de dados para o gráfico
+const dataGrafico = [];
+for(let h = 10; h <= 23; h++)dataGrafico.push({
+    hour: h,
+    carsRemoved: 0,
+    moneyEarned: 0
+});
+let myChart; // Variável global para a instância do gráfico
 window.onload = function() {
     tabela = document.getElementById("matriz_vagas");
     criarMatriz();
@@ -760,20 +706,89 @@ window.onload = function() {
     document.getElementById("btn-fecharPrecos").onclick = ()=>{
         document.getElementById("popupPrecos").classList.add("hidden");
     };
-    (async function() {
-        new (0, _autoDefault.default)(document.getElementById('acquisitions'), {
-            type: 'bar',
-            data: {
-                labels: data.map((row)=>row.hour + ':00'),
-                datasets: [
-                    {
-                        label: 'Acquisitions by year',
-                        data: data.map((row)=>row.count)
+    // Inicialização do gráfico
+    const ctx = document.getElementById('acquisitions').getContext('2d');
+    myChart = new (0, _autoDefault.default)(ctx, {
+        type: 'bar',
+        data: {
+            labels: dataGrafico.map((row)=>row.hour + ':00'),
+            datasets: [
+                {
+                    label: 'Carros Retirados',
+                    data: dataGrafico.map((row)=>row.carsRemoved),
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y-cars'
+                },
+                {
+                    label: 'Valor Arrecadado (R$)',
+                    data: dataGrafico.map((row)=>row.moneyEarned),
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y-money'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            stacked: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Hora do Dia'
                     }
-                ]
+                },
+                'y-cars': {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Quantidade de Carros Retirados'
+                    },
+                    ticks: {
+                        stepSize: 1
+                    }
+                },
+                'y-money': {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Valor Arrecadado (R$)'
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) label += ': ';
+                            if (context.parsed.y !== null) {
+                                if (context.dataset.yAxisID === 'y-money') label += 'R$ ' + context.parsed.y.toFixed(2);
+                                else label += context.parsed.y;
+                            }
+                            return label;
+                        }
+                    }
+                }
             }
-        });
-    })();
+        }
+    });
 };
 function criarMatriz() {
     for(let i = 0; i < linhas; i++){
@@ -809,11 +824,11 @@ function corAleatoria() {
     ];
     return cores[Math.floor(Math.random() * cores.length)];
 }
-function criarCarro(placa, horario) {
+function criarCarro(placa, horarioEntradaDisplay) {
     const carro = document.createElement("div");
     carro.classList.add("carro");
     carro.style.backgroundColor = corAleatoria();
-    carro.title = `Entrou \xe0s ${horario}`;
+    carro.title = `Entrou \xe0s ${horarioEntradaDisplay}`;
     const iconesCarros = [
         "fa-car",
         "fa-car-side",
@@ -828,14 +843,14 @@ function criarCarro(placa, horario) {
     const iconeAleatorio = iconesCarros[Math.floor(Math.random() * iconesCarros.length)];
     const icone = document.createElement("i");
     icone.classList.add("fas", iconeAleatorio);
-    const texto = document.createElement("span");
-    texto.textContent = placa;
-    const horarioTexto = document.createElement("span");
-    horarioTexto.classList.add("horario");
-    horarioTexto.textContent = `00:00:00`;
+    const textoPlaca = document.createElement("span");
+    textoPlaca.textContent = placa;
+    const horarioTextoPermanencia = document.createElement("span");
+    horarioTextoPermanencia.classList.add("horario");
+    horarioTextoPermanencia.textContent = `00:00:00`;
     carro.appendChild(icone);
-    carro.appendChild(texto);
-    carro.appendChild(horarioTexto);
+    carro.appendChild(textoPlaca);
+    carro.appendChild(horarioTextoPermanencia);
     return carro;
 }
 function placaJaExiste(placa) {
@@ -849,10 +864,10 @@ function placaJaExiste(placa) {
 function atualizarRelogio() {
     segundo++;
     if (segundo >= 60) {
-        segundo -= 60;
+        segundo = 0;
         minuto++;
         if (minuto >= 60) {
-            minuto -= 60;
+            minuto = 0;
             hora++;
             if (hora >= 24) hora = 10;
         }
@@ -864,54 +879,41 @@ function atualizarRelogio() {
 function atualizarRelogioGlobal() {
     segundoGlobal++;
     if (segundoGlobal >= 60) {
-        segundoGlobal -= 60;
+        segundoGlobal = 0;
         minutoGlobal++;
         if (minutoGlobal >= 60) {
-            minutoGlobal -= 60;
+            minutoGlobal = 0;
             horaGlobal++;
         }
     }
-    const format = (n)=>n.toString().padStart(2, '0');
-    console.log(`${format(horaGlobal)}:${format(minutoGlobal)}:${format(segundoGlobal)}`);
     atualizarRelogioEmCarros();
 }
 function atualizarRelogioEmCarros() {
     const celulas = document.querySelectorAll("#matriz_vagas td");
+    const format = (n)=>n.toString().padStart(2, '0');
     for (let celula of celulas)if (celula.dataset.livre === "false") {
-        const carro = celula.querySelector(".carro");
-        const carroTime = celula.querySelector(".horario");
-        let celulaDatasetHora = celula.dataset.horaPercorridaCarro;
-        let celulaDatasetMinuto = celula.dataset.minutoPercorridoCarro;
-        let celulaDatasetSegundo = celula.dataset.segundoPercorridoCarro;
-        let celulaHoraEntrada = celula.dataset.horaEntradaCarro;
-        let celulaMinutoEntrada = celula.dataset.minutoEntradaCarro;
-        let celulaSegundoEntrada = celula.dataset.segundoEntradaCarro;
-        celulaDatasetSegundo++;
-        if (celulaDatasetSegundo >= 60) {
-            celulaDatasetSegundo -= 60;
-            celulaDatasetMinuto++;
-            if (celulaDatasetMinuto >= 60) {
-                celulaDatasetMinuto -= 60;
-                celulaDatasetHora++;
-            }
-        }
-        celula.dataset.horaPercorridaCarro = celulaDatasetHora;
-        celula.dataset.minutoPercorridoCarro = celulaDatasetMinuto;
-        celula.dataset.segundoPercorridoCarro = celulaDatasetSegundo;
-        const format = (n)=>n.toString().padStart(2, '0');
-        carroTime.textContent = `${format(horaGlobal - celulaHoraEntrada)}:${format(minutoGlobal - celulaMinutoEntrada)}:${format(segundoGlobal - celulaSegundoEntrada)}`;
-    // carroTime.textContent = `${format(horaGlobal - celulaHoraEntrada)}:${format(minutoGlobal - celulaMinutoEntrada)}:${format(segundoGlobal - celulaSegundoEntrada)}`;
+        const carroTimeDisplay = celula.querySelector(".carro .horario");
+        if (!carroTimeDisplay) continue;
+        const hEntradaCarroGlobal = parseInt(celula.dataset.horaEntradaCarro);
+        const mEntradaCarroGlobal = parseInt(celula.dataset.minutoEntradaCarro);
+        const sEntradaCarroGlobal = parseInt(celula.dataset.segundoEntradaCarro);
+        let permanenciaTotalSegundos = horaGlobal * 3600 + minutoGlobal * 60 + segundoGlobal - (hEntradaCarroGlobal * 3600 + mEntradaCarroGlobal * 60 + sEntradaCarroGlobal);
+        if (permanenciaTotalSegundos < 0) permanenciaTotalSegundos = 0;
+        const permanenciaH = Math.floor(permanenciaTotalSegundos / 3600);
+        const permanenciaM = Math.floor(permanenciaTotalSegundos % 3600 / 60);
+        const permanenciaS = permanenciaTotalSegundos % 60;
+        carroTimeDisplay.textContent = `${format(permanenciaH)}:${format(permanenciaM)}:${format(permanenciaS)}`;
     }
 }
 setInterval(atualizarRelogio, 1000);
-function avancarTempo(min) {
-    minuto += min;
+function avancarTempo(minutosAvanco) {
+    minuto += minutosAvanco;
     while(minuto >= 60){
         minuto -= 60;
         hora++;
         if (hora >= 24) hora = 10;
     }
-    minutoGlobal += min;
+    minutoGlobal += minutosAvanco;
     while(minutoGlobal >= 60){
         minutoGlobal -= 60;
         horaGlobal++;
@@ -940,28 +942,32 @@ document.getElementById("forms").addEventListener("submit", function(event) {
     }
     const vagaAleatoria = celulasLivres[Math.floor(Math.random() * celulasLivres.length)];
     const format = (n)=>n.toString().padStart(2, '0');
-    const horarioEntrada = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
+    const horarioEntradaDisplay = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
     vagaAleatoria.dataset.livre = "false";
-    vagaAleatoria.dataset.horaEntrada = horarioEntrada;
+    vagaAleatoria.dataset.horaEntradaDisplay = horarioEntradaDisplay;
     vagaAleatoria.innerHTML = "";
     vagaAleatoria.classList.add("breathing");
-    vagaAleatoria.dataset.horaPercorridaCarro = 0;
-    vagaAleatoria.dataset.minutoPercorridoCarro = 0;
-    vagaAleatoria.dataset.segundoPercorridoCarro = 0;
     vagaAleatoria.dataset.horaEntradaCarro = horaGlobal;
     vagaAleatoria.dataset.minutoEntradaCarro = minutoGlobal;
     vagaAleatoria.dataset.segundoEntradaCarro = segundoGlobal;
-    vagaAleatoria.appendChild(criarCarro(placa, horarioEntrada));
-    document.getElementById("mensagem").textContent = `Carro com placa ${placa} estacionado \xe0s ${horarioEntrada}.`;
+    vagaAleatoria.appendChild(criarCarro(placa, horarioEntradaDisplay));
+    document.getElementById("mensagem").textContent = `Carro com placa ${placa} estacionado \xe0s ${horarioEntradaDisplay}.`;
     placaInput.value = "";
     vagaAleatoria.onclick = function() {
-        const entradaStr = this.dataset.horaEntrada;
-        const [hEntrada, mEntrada, sEntrada] = entradaStr.split(":").map(Number);
-        const entradaTotalSegundos = hEntrada * 3600 + mEntrada * 60 + sEntrada;
-        const agoraTotalSegundos = hora * 3600 + minuto * 60 + segundo;
-        let diffSegundos = agoraTotalSegundos - entradaTotalSegundos;
-        if (diffSegundos < 0) diffSegundos += 86400;
-        const diffMin = Math.floor(diffSegundos / 60);
+        const entradaStrDisplay = this.dataset.horaEntradaDisplay;
+        const hEntradaGlobalCarro = parseInt(this.dataset.horaEntradaCarro);
+        const mEntradaGlobalCarro = parseInt(this.dataset.minutoEntradaCarro);
+        const sEntradaGlobalCarro = parseInt(this.dataset.segundoEntradaCarro);
+        const entradaTotalGlobalSegundos = hEntradaGlobalCarro * 3600 + mEntradaGlobalCarro * 60 + sEntradaGlobalCarro;
+        const agoraTotalGlobalSegundos = horaGlobal * 3600 + minutoGlobal * 60 + segundoGlobal;
+        let diffTotalSegundos = agoraTotalGlobalSegundos - entradaTotalGlobalSegundos;
+        if (diffTotalSegundos < 0) diffTotalSegundos = 0;
+        const diffMin = Math.floor(diffTotalSegundos / 60);
+        const permanenciaH = Math.floor(diffTotalSegundos / 3600);
+        const permanenciaM = Math.floor(diffTotalSegundos % 3600 / 60);
+        const permanenciaS = diffTotalSegundos % 60;
+        const formatPermanencia = (n)=>n.toString().padStart(2, '0'); // Formatador local para permanência
+        const tempoEstacionadoFormatado = `${formatPermanencia(permanenciaH)}h ${formatPermanencia(permanenciaM)}m ${formatPermanencia(permanenciaS)}s`;
         let preco = 0;
         if (diffMin > 15) {
             const horasFracionadas = diffMin / 60.0;
@@ -973,21 +979,23 @@ document.getElementById("forms").addEventListener("submit", function(event) {
         const placaDoCarro = placaDoCarroElement ? placaDoCarroElement.textContent : "N/A";
         popupCelulaAtiva = this;
         popupPlacaAtiva = placaDoCarro;
-        document.getElementById("popup-text").innerHTML = `Carro com placa <strong>${placaDoCarro}</strong> entrou \xe0s ${entradaStr}<br>
-      Tempo estacionado: <strong>${diffMin} minutos</strong><br>
+        document.getElementById("popup-text").innerHTML = `Carro com placa <strong>${placaDoCarro}</strong> entrou \xe0s ${entradaStrDisplay}<br>
+      Tempo estacionado: <strong>${tempoEstacionadoFormatado} (${diffMin} minutos totais)</strong><br>
       Valor a pagar: <strong>R$ ${preco.toFixed(2)}</strong>`;
         document.getElementById("popup").classList.remove("hidden");
     };
 });
 document.getElementById("btn-retirar").onclick = ()=>{
     if (popupCelulaAtiva) {
-        const entradaStr = popupCelulaAtiva.dataset.horaEntrada;
-        const [hEntrada, mEntrada, sEntrada] = entradaStr.split(":").map(Number);
-        const entradaTotalSegundos = hEntrada * 3600 + mEntrada * 60 + sEntrada;
-        const saidaTotalSegundos = hora * 3600 + minuto * 60 + segundo;
-        let diffSegundos = saidaTotalSegundos - entradaTotalSegundos;
-        if (diffSegundos < 0) diffSegundos += 86400;
-        const diffMin = Math.floor(diffSegundos / 60);
+        const entradaStrDisplay = popupCelulaAtiva.dataset.horaEntradaDisplay;
+        const hEntradaGlobalCarro = parseInt(popupCelulaAtiva.dataset.horaEntradaCarro);
+        const mEntradaGlobalCarro = parseInt(popupCelulaAtiva.dataset.minutoEntradaCarro);
+        const sEntradaGlobalCarro = parseInt(popupCelulaAtiva.dataset.segundoEntradaCarro);
+        const entradaTotalGlobalSegundos = hEntradaGlobalCarro * 3600 + mEntradaGlobalCarro * 60 + sEntradaGlobalCarro;
+        const saidaTotalGlobalSegundos = horaGlobal * 3600 + minutoGlobal * 60 + segundoGlobal;
+        let diffTotalSegundos = saidaTotalGlobalSegundos - entradaTotalGlobalSegundos;
+        if (diffTotalSegundos < 0) diffTotalSegundos = 0;
+        const diffMin = Math.floor(diffTotalSegundos / 60);
         let preco = 0;
         if (diffMin > 15) {
             const horasFracionadas = diffMin / 60.0;
@@ -996,13 +1004,25 @@ document.getElementById("btn-retirar").onclick = ()=>{
             if (horasCobradas > 1) preco += (horasCobradas - 1) * 2;
         }
         valorTotalAcumulado += preco;
+        // Atualiza os dados do gráfico
+        const horaDeRetirada = hora; // Usa a hora atual do relógio de display (10-23)
+        const entradaGrafico = dataGrafico.find((d)=>d.hour === horaDeRetirada);
+        if (entradaGrafico) {
+            entradaGrafico.carsRemoved++;
+            entradaGrafico.moneyEarned += preco;
+            if (myChart) {
+                myChart.data.datasets[0].data = dataGrafico.map((row)=>row.carsRemoved);
+                myChart.data.datasets[1].data = dataGrafico.map((row)=>row.moneyEarned);
+                myChart.update();
+            }
+        }
         const format = (n)=>n.toString().padStart(2, '0');
-        const saidaStr = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
+        const saidaStrDisplay = `${format(hora)}:${format(minuto)}:${format(segundo)}`;
         const historicoItem = document.createElement("li");
         historicoItem.innerHTML = `
       <strong>Placa:</strong> ${popupPlacaAtiva} |
-      <strong>Entrada:</strong> ${entradaStr} |
-      <strong>Sa\xedda:</strong> ${saidaStr} |
+      <strong>Entrada:</strong> ${entradaStrDisplay} |
+      <strong>Sa\xedda:</strong> ${saidaStrDisplay} |
       <strong>Valor:</strong> R$ ${preco.toFixed(2)}
     `;
         const historicoList = document.getElementById("historico");
@@ -1011,7 +1031,12 @@ document.getElementById("btn-retirar").onclick = ()=>{
         popupCelulaAtiva.dataset.livre = "true";
         popupCelulaAtiva.innerHTML = "";
         popupCelulaAtiva.style.backgroundColor = "";
+        popupCelulaAtiva.classList.remove("breathing");
         popupCelulaAtiva.onclick = null;
+        delete popupCelulaAtiva.dataset.horaEntradaDisplay;
+        delete popupCelulaAtiva.dataset.horaEntradaCarro;
+        delete popupCelulaAtiva.dataset.minutoEntradaCarro;
+        delete popupCelulaAtiva.dataset.segundoEntradaCarro;
         document.getElementById("popup").classList.add("hidden");
         document.getElementById("mensagem").textContent = `Carro com placa ${popupPlacaAtiva} foi retirado. Valor: R$ ${preco.toFixed(2)}.`;
         popupCelulaAtiva = null;
@@ -14546,6 +14571,6 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["7SvX3","kyksZ"], "kyksZ", "parcelRequire0bb4", {})
+},{}]},["lgxfO","kyksZ"], "kyksZ", "parcelRequire0bb4", {})
 
 //# sourceMappingURL=MatrixRubenGonzales.d29bb997.js.map
