@@ -1,3 +1,5 @@
+import Chart from 'chart.js/auto';
+
 let linhas = 5;
 let colunas = 6;
 let tabela;
@@ -33,6 +35,34 @@ window.onload = function () {
   document.getElementById("btn-fecharPrecos").onclick = () => {
     document.getElementById("popupPrecos").classList.add("hidden");
   };
+
+  (async function() {
+  const data = [
+    { year: 2010, count: 10 },
+    { year: 2011, count: 20 },
+    { year: 2012, count: 15 },
+    { year: 2013, count: 25 },
+    { year: 2014, count: 22 },
+    { year: 2015, count: 30 },
+    { year: 2016, count: 28 },
+  ];
+
+  new Chart(
+    document.getElementById('acquisitions'),
+    {
+      type: 'bar',
+      data: {
+        labels: data.map(row => row.year),
+        datasets: [
+          {
+            label: 'Acquisitions by year',
+            data: data.map(row => row.count)
+          }
+        ]
+      }
+    }
+  );
+  })();
 };
 
 function criarMatriz() {
@@ -41,9 +71,6 @@ function criarMatriz() {
     for (let j = 0; j < colunas; j++) {
       const celula = document.createElement("td");
       celula.dataset.livre = "true";
-      celula.dataset.horaEntradaCarro = 0;
-      celula.dataset.minutoEntradaCarro = 0;
-      celula.dataset.segundoEntradaCarro = 0;
       linha.appendChild(celula);
     }
     tabela.appendChild(linha);
@@ -103,10 +130,10 @@ function placaJaExiste(placa) {
 function atualizarRelogio() {
   segundo++;
   if (segundo >= 60) {
-    segundo = 0;
+    segundo -= 60;
     minuto++;
     if (minuto >= 60) {
-      minuto = 0;
+      minuto -= 60;
       hora++;
       if (hora >= 24) hora = 10;
     }
@@ -121,13 +148,16 @@ function atualizarRelogio() {
 function atualizarRelogioGlobal() {
   segundoGlobal++;
   if (segundoGlobal >= 60) {
-    segundoGlobal = 0;
+    segundoGlobal -= 60;
     minutoGlobal++;
     if (minutoGlobal >= 60) {
-      minutoGlobal = 0;
+      minutoGlobal -= 60;
       horaGlobal++;
     }
   }
+
+  const format = (n) => n.toString().padStart(2, '0');
+  console.log(`${format(horaGlobal)}:${format(minutoGlobal)}:${format(segundoGlobal)}`);
   
   atualizarRelogioEmCarros();
 }
@@ -138,26 +168,30 @@ function atualizarRelogioEmCarros() {
     if(celula.dataset.livre === "false") {
       const carro = celula.querySelector(".carro");
       const carroTime = celula.querySelector(".horario");
-      let celulaDatasetHora = celula.dataset.horaEntradaCarro;
-      let celulaDatasetMinuto = celula.dataset.minutoEntradaCarro;
-      let celulaDatasetSegundo = celula.dataset.segundoEntradaCarro;
+      let celulaDatasetHora = celula.dataset.horaPercorridaCarro;
+      let celulaDatasetMinuto = celula.dataset.minutoPercorridoCarro;
+      let celulaDatasetSegundo = celula.dataset.segundoPercorridoCarro;
+      let celulaHoraEntrada = celula.dataset.horaEntradaCarro;
+      let celulaMinutoEntrada = celula.dataset.minutoEntradaCarro;
+      let celulaSegundoEntrada = celula.dataset.segundoEntradaCarro;
 
       celulaDatasetSegundo++;
       if (celulaDatasetSegundo >= 60) {
-        celulaDatasetSegundo = 0;
+        celulaDatasetSegundo -= 60;
         celulaDatasetMinuto++;
         if (celulaDatasetMinuto >= 60) {
-          celulaDatasetMinuto = 0;
+          celulaDatasetMinuto -= 60;
           celulaDatasetHora++;
         }
       }
 
-      celula.dataset.horaEntradaCarro = celulaDatasetHora;
-      celula.dataset.minutoEntradaCarro = celulaDatasetMinuto;
-      celula.dataset.segundoEntradaCarro = celulaDatasetSegundo;
+      celula.dataset.horaPercorridaCarro = celulaDatasetHora;
+      celula.dataset.minutoPercorridoCarro = celulaDatasetMinuto;
+      celula.dataset.segundoPercorridoCarro = celulaDatasetSegundo;
       
       const format = (n) => n.toString().padStart(2, '0');
-      carroTime.textContent = `${format(celulaDatasetHora)}:${format(celulaDatasetMinuto)}:${format(celulaDatasetSegundo)}`;
+      carroTime.textContent = `${format(horaGlobal - celulaHoraEntrada)}:${format(minutoGlobal - celulaMinutoEntrada)}:${format(segundoGlobal - celulaSegundoEntrada)}`;
+      // carroTime.textContent = `${format(horaGlobal - celulaHoraEntrada)}:${format(minutoGlobal - celulaMinutoEntrada)}:${format(segundoGlobal - celulaSegundoEntrada)}`;
     }
   }
 }
@@ -170,6 +204,12 @@ function avancarTempo(min) {
     minuto -= 60;
     hora++;
     if (hora >= 24) hora = 10;
+  }
+  
+  minutoGlobal += min;
+  while (minutoGlobal >= 60) {
+    minutoGlobal -= 60;
+    horaGlobal++;
   }
   atualizarRelogio();
 }
@@ -207,6 +247,12 @@ document.getElementById("forms").addEventListener("submit", function (event) {
   vagaAleatoria.dataset.horaEntrada = horarioEntrada;
   vagaAleatoria.innerHTML = "";
   vagaAleatoria.classList.add("breathing");
+  vagaAleatoria.dataset.horaPercorridaCarro = 0;
+  vagaAleatoria.dataset.minutoPercorridoCarro = 0;
+  vagaAleatoria.dataset.segundoPercorridoCarro = 0;
+  vagaAleatoria.dataset.horaEntradaCarro = horaGlobal;
+  vagaAleatoria.dataset.minutoEntradaCarro = minutoGlobal;
+  vagaAleatoria.dataset.segundoEntradaCarro = segundoGlobal;
   vagaAleatoria.appendChild(criarCarro(placa, horarioEntrada));
 
   document.getElementById("mensagem").textContent = `Carro com placa ${placa} estacionado às ${horarioEntrada}.`;
@@ -304,3 +350,15 @@ document.getElementById("btn-retirar").onclick = () => {
     popupPlacaAtiva = null;
   }
 };
+
+document.querySelector("#avancar30min").onclick = function(){
+  avancarTempo(30);
+}
+
+document.querySelector("#avancar15min").onclick = function(){
+  avancarTempo(15);
+}
+
+document.querySelector("#avancar1h").onclick = function(){
+  avancarTempo(60);
+}
