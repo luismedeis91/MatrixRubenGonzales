@@ -74,6 +74,24 @@
                 <table id="matriz_vagas" class="animate__animate animate__fadeInUp"></table>
             </div>
         </div>
+
+        <!-- Emulador aqui -->
+        <button onclick="abrirJanela()">Abrir Emulador</button>
+        <script>function abrirJanela() {
+    const largura = 480;
+    const altura = 432;
+    const esquerda = (window.screen.width - largura) / 2;
+    const topo = (window.screen.height - altura) / 2;
+    const opcoes = `width=${largura},height=${altura},` + `left=${esquerda},top=${topo},` + `resizable=no,scrollbars=no,toolbar=no,menubar=no,` + `location=no,status=no`;
+    const janela = window.open('gba/tela.html', 'Emulador', opcoes);
+    if (janela) {
+        janela.moveTo(esquerda, topo);
+        janela.resizeTo(largura, altura);
+    }
+}
+
+</script>
+
     </main>
 
     <footer></footer>
