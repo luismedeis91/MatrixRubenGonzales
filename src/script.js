@@ -15,6 +15,24 @@ let horaGlobal = 0;
 let minutoGlobal = 0;
 let segundoGlobal = 0;
 
+const data = [
+    { hour: 10, count: 0 },
+    { hour: 11, count: 0 },
+    { hour: 12, count: 0 },
+    { hour: 13, count: 0 },
+    { hour: 14, count: 0 },
+    { hour: 15, count: 0 },
+    { hour: 16, count: 0 },
+    { hour: 17, count: 0 },
+    { hour: 18, count: 0 },
+    { hour: 19, count: 0 },
+    { hour: 20, count: 0 },
+    { hour: 21, count: 0 },
+    { hour: 22, count: 0 },
+    { hour: 23, count: 0 },
+    { hour: 24, count: 0 },
+  ];
+
 window.onload = function () {
   tabela = document.getElementById("matriz_vagas");
   criarMatriz();
@@ -37,22 +55,12 @@ window.onload = function () {
   };
 
   (async function() {
-  const data = [
-    { year: 2010, count: 10 },
-    { year: 2011, count: 20 },
-    { year: 2012, count: 15 },
-    { year: 2013, count: 25 },
-    { year: 2014, count: 22 },
-    { year: 2015, count: 30 },
-    { year: 2016, count: 28 },
-  ];
-
   new Chart(
     document.getElementById('acquisitions'),
     {
       type: 'bar',
       data: {
-        labels: data.map(row => row.year),
+        labels: data.map(row => row.hour + ':00'),
         datasets: [
           {
             label: 'Acquisitions by year',
