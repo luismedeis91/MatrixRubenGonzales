@@ -27,6 +27,105 @@ window.onload = function () {
   tabela = document.getElementById("matriz_vagas");
   criarMatriz();
 
+   const placaInput = document.getElementById("placa");
+
+  placaInput.addEventListener("input", function (e) {
+    let value = e.target.value.toUpperCase();
+    const originalCursorPosition = e.target.selectionStart;
+    let newCursorPosition = originalCursorPosition;
+
+    let processedValue = "";
+
+    
+    if (value.length === 4 && value[3] !== '-' &&
+        /^[A-Z]{3}$/.test(value.substring(0, 3)) && 
+        /^\d$/.test(value[3])) {                  
+      value = value.substring(0, 3) + '-' + value[3];
+  
+      if (originalCursorPosition === 4) {
+        newCursorPosition = 5; 
+      }
+    }
+
+    let tempValue = "";
+    let hyphenInsertedByLogic = false; 
+
+    for (let i = 0; i < value.length; i++) {
+        const char = value[i];
+        const currentLength = tempValue.length;
+
+        if (currentLength < 3) { 
+            if (/[A-Z]/.test(char)) {
+                tempValue += char;
+            } else {
+                if (originalCursorPosition > i) newCursorPosition--; 
+            }
+        } else if (currentLength === 3) { 
+            if (char === '-' && !tempValue.includes('-')) { 
+                tempValue += char;
+            } else if (/[A-Z0-9]/.test(char)) { 
+                tempValue += char;
+            } else {
+                if (originalCursorPosition > i) newCursorPosition--;
+            }
+        } else if (currentLength === 4 && tempValue.includes('-')) {
+            if (/\d/.test(char)) { // Deve ser número
+                tempValue += char;
+            } else {
+                if (originalCursorPosition > i) newCursorPosition--;
+            }
+        } else if (currentLength === 4 && !tempValue.includes('-')) { 
+             if (/[A-Z]/.test(char) && /\d$/.test(tempValue[3])) { 
+                tempValue += char;
+            } else {
+                if (originalCursorPosition > i) newCursorPosition--;
+            }
+        } else if (currentLength > 4) { 
+            if (tempValue.includes('-')) { 
+                if (/\d/.test(char)) {
+                    tempValue += char;
+                } else {
+                   if (originalCursorPosition > i) newCursorPosition--;
+                }
+            } else { // Formato LLLNLN... (Mercosul)
+                if (/\d/.test(char) && /[A-Z]$/.test(tempValue[tempValue.length-1]) && tempValue.length == 5) { // LLLNLN (NÚMERO após LETRA)
+                     tempValue += char;
+                } else if (/\d$/.test(tempValue[tempValue.length-1]) && tempValue.length == 6 && /\d/.test(char)) { // LLLNLNN (NÚMERO após NÚMERO)
+                     tempValue += char;
+                }
+                 else {
+                   if (originalCursorPosition > i) newCursorPosition--;
+                }
+            }
+        }
+    }
+    processedValue = tempValue;
+
+
+    if (e.target.value !== processedValue) {
+        e.target.value = processedValue;
+      
+        if (value.length > e.target.value.length && originalCursorPosition > processedValue.length) {
+             e.target.setSelectionRange(processedValue.length, processedValue.length);
+        } else {
+             e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+        }
+    }
+  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   document.getElementById("btn-fechar").onclick = () => {
     document.getElementById("popup").classList.add("hidden");
   };
@@ -62,7 +161,7 @@ window.onload = function () {
         {
           label: 'Valor Arrecadado (R$)',
           data: dataGrafico.map(row => row.moneyEarned),
-          backgroundColor: 'rgba(54, 162, 235, 0.5)', // Azul para dinheiro
+          backgroundColor: 'rgba(54, 162, 235, 0.5)', 
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1,
           yAxisID: 'y-money',
@@ -287,6 +386,21 @@ document.getElementById("forms").addEventListener("submit", function (event) {
   const placa = placaInput.value.trim().toUpperCase();
   if (!placa) return;
 
+  if (!placaValidaSudeste(placa)) {
+    document.getElementById("popup-textRepetido").innerHTML = `
+      <strong>Placa inválida ou não pertence à Região Sudeste!</strong><br><br>
+      Apenas placas no formato Mercosul (Ex: ABC1D23) de SP, RJ, MG ou ES são permitidas.<br><br>
+      <em>"Essa placa não está nos conformes do Mercosul para esta região, parceiro."</em><br>
+      — <strong>Aqui é so na cariocagem</strong> <em>, mané</em>
+    `;
+    document.getElementById("popupRepetido").classList.remove("hidden");
+    placaInput.focus();
+    return;
+  }
+
+
+
+
   if (placaJaExiste(placa)) {
     document.getElementById("popup-textRepetido").innerHTML = `
       <strong>Placa duplicada detectada!</strong><br><br>
@@ -463,4 +577,49 @@ document.querySelector("#avancar15min").onclick = function(){
 
 document.querySelector("#avancar1h").onclick = function(){
   avancarTempo(60);
+}
+
+
+
+function placaValidaSudeste(placaInput){
+    const placa = placaInput.toUpperCase().replace(/-/g, "")
+
+    const regexMercosul = /^[A-Z]{3}\d[A-Z]\d{2}$/
+
+    if(regexMercosul.test(placa)){
+        const primeirasletras = placa.substring(0,3)
+        
+         const prefixosMercosulSudesteExemplos = [
+            // São Paulo 
+            "BRA", "BRB", "BRC", "BRD", 
+            "BFA", "BFB", "BFC", "BFD", "BFE", "BFF", "BFG", "BFH", "BFI", "BFJ", "BFK", "BFL", "BFM",
+            "QSA", "QSB", "QSC", "QSD", "QSE", "QSF", "QSG", "QSH", "QSI", "QSJ", "QSK", "QSL", "QSM",
+            "RIA", "RIB", "RIC", "RID", "RIE", "RIF", "RIG", "RIH", "RII", "RIJ", "RIK", "RIL", "RIM",
+            // Rio de Janeiro 
+            "RIO", "RIW", "RJX", "RKA", "RKB", "RKC", "LVA", "LVB", "LVC", "LVD", "LVE",
+            // Minas Gerais
+            "QPA", "QPB", "QPC", "QPD", "QPE", "QPF", "QPG", "QPH", "QPI", "QPJ", "QPK", "QPL", "QPM",
+            "RUA", "RUB", "RUC", "RUD", "RUE", "RUF", "RUG", "RUH", "RUI", "RUJ", "RUK", "RUL", "RUM",
+            // Espírito Santo 
+            "QVA", "QVB", "QVC", "QVD", "QVE", "QVF", "QVG", "QVH", "QVI", "QVJ", "QVK", "QVL", "QVM",
+            "RCA", "RCB", "RCC"
+           
+        ];
+
+
+        const primeiraLetraMercosul = primeirasletras[0]
+        const iniciaisComunsMercosul = ['B', 'L', 'O', 'P', 'Q', 'R'];
+
+        if(prefixosMercosulSudesteExemplos.includes(primeirasletras)){
+            iniciaisComunsMercosul.includes(primeiraLetraMercosul)
+            return true
+        }
+
+
+        return false
+
+    }
+
+    return false
+    
 }
