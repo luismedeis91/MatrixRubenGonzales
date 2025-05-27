@@ -61,7 +61,7 @@
 
         <form id="forms">
             <label for="placa">Placa do automóvel</label>
-            <input type="text" id="placa" maxlength="8" placeholder="ABCDE" required />
+            <input type="text" id="placa" placeholder="AAA-0000" maxlength="8" required />
             <button type="submit">Estacionar</button>
         </form>
 
@@ -83,26 +83,26 @@
         <button id="emulador" onclick="abrirJanela()">Abrir Emulador</button>
 
         <script>
-        function abrirJanela() {
-            const largura = 480;
-            const altura = 432;
-            const esquerda = (window.screen.width - largura) / 2;
-            const topo = (window.screen.height - altura) / 2;
+            function abrirJanela() {
+                const largura = 480;
+                const altura = 432;
+                const esquerda = (window.screen.width - largura) / 2;
+                const topo = (window.screen.height - altura) / 2;
 
-            const opcoes = `width=${largura},height=${altura},` +
-                        `left=${esquerda},top=${topo},` +
-                        `resizable=no,scrollbars=no,toolbar=no,menubar=no,` +
-                        `location=no,status=no`;
+                const opcoes = `width=${largura},height=${altura},` +
+                    `left=${esquerda},top=${topo},` +
+                    `resizable=no,scrollbars=no,toolbar=no,menubar=no,` +
+                    `location=no,status=no`;
 
-            const urlGitHub = 'https://luisaugusto2005.github.io/IMGs-Test/';
+                const urlGitHub = 'https://luisaugusto2005.github.io/IMGs-Test/';
 
-            const janela = window.open(urlGitHub, 'GitHub Pages', opcoes);
+                const janela = window.open(urlGitHub, 'GitHub Pages', opcoes);
 
-            if (janela) {
-                janela.moveTo(esquerda, topo);
-                janela.resizeTo(largura, altura);
+                if (janela) {
+                    janela.moveTo(esquerda, topo);
+                    janela.resizeTo(largura, altura);
+                }
             }
-        }
         </script>
 
     </main>
