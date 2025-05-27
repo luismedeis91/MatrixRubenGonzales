@@ -682,14 +682,13 @@ let segundo = 0;
 let horaGlobal = 0;
 let minutoGlobal = 0;
 let segundoGlobal = 0;
-// Estrutura de dados para o gráfico
 const dataGrafico = [];
 for(let h = 10; h <= 23; h++)dataGrafico.push({
     hour: h,
     carsRemoved: 0,
     moneyEarned: 0
 });
-let myChart; // Variável global para a instância do gráfico
+let myChart;
 window.onload = function() {
     tabela = document.getElementById("matriz_vagas");
     criarMatriz();
@@ -701,10 +700,9 @@ window.onload = function() {
         let processedValue = "";
         if (value.length === 4 && value[3] !== '-' && /^[A-Z]{3}$/.test(value.substring(0, 3)) && /^\d$/.test(value[3])) {
             value = value.substring(0, 3) + '-' + value[3];
-            if (originalCursorPosition === 4) newCursorPosition = 5;
+            if (originalCursorPosition === 4) newCursorPosition = 5; // Pula o hífen
         }
         let tempValue = "";
-        let hyphenInsertedByLogic = false;
         for(let i = 0; i < value.length; i++){
             const char = value[i];
             const currentLength = tempValue.length;
@@ -715,26 +713,25 @@ window.onload = function() {
                 if (char === '-' && !tempValue.includes('-')) tempValue += char;
                 else if (/[A-Z0-9]/.test(char)) tempValue += char;
                 else if (originalCursorPosition > i) newCursorPosition--;
-            } else if (currentLength === 4 && tempValue.includes('-')) {
-                if (/\d/.test(char)) tempValue += char;
+            } else if (tempValue.includes('-')) {
+                if (tempValue.length < 8 && /\d/.test(char)) tempValue += char;
                 else if (originalCursorPosition > i) newCursorPosition--;
-            } else if (currentLength === 4 && !tempValue.includes('-')) {
-                if (/[A-Z]/.test(char) && /\d$/.test(tempValue[3])) tempValue += char;
-                else if (originalCursorPosition > i) newCursorPosition--;
-            } else if (currentLength > 4) {
-                if (tempValue.includes('-')) {
-                    if (/\d/.test(char)) tempValue += char;
-                    else if (originalCursorPosition > i) newCursorPosition--;
-                } else {
-                    if (/\d/.test(char) && /[A-Z]$/.test(tempValue[tempValue.length - 1]) && tempValue.length == 5) tempValue += char;
-                    else if (/\d$/.test(tempValue[tempValue.length - 1]) && tempValue.length == 6 && /\d/.test(char)) tempValue += char;
-                    else if (originalCursorPosition > i) newCursorPosition--;
-                }
+            } else {
+                if (currentLength === 3 && /\d/.test(char) && /^[A-Z]{3}$/.test(tempValue)) tempValue += char;
+                else if (currentLength === 4 && /[A-Z]/.test(char) && /^[A-Z]{3}\d$/.test(tempValue)) tempValue += char;
+                else if (currentLength === 5 && /\d/.test(char) && /^[A-Z]{3}\d[A-Z]$/.test(tempValue)) tempValue += char;
+                else if (currentLength === 6 && /\d/.test(char) && /^[A-Z]{3}\d[A-Z]\d$/.test(tempValue)) tempValue += char;
+                else if (originalCursorPosition > i && tempValue.length < 7) newCursorPosition--; // Apenas ajusta se não estiver no limite
             }
         }
         processedValue = tempValue;
+        // Limita o tamanho máximo
+        if (processedValue.includes('-')) {
+            if (processedValue.length > 8) processedValue = processedValue.substring(0, 8); // LLL-NNNN
+        } else if (processedValue.length > 7) processedValue = processedValue.substring(0, 7); // LLLNLNN
         if (e.target.value !== processedValue) {
             e.target.value = processedValue;
+            // Tenta restaurar a posição do cursor de forma inteligente
             if (value.length > e.target.value.length && originalCursorPosition > processedValue.length) e.target.setSelectionRange(processedValue.length, processedValue.length);
             else e.target.setSelectionRange(newCursorPosition, newCursorPosition);
         }
@@ -762,16 +759,15 @@ window.onload = function() {
                 {
                     label: 'Carros Retirados',
                     data: dataGrafico.map((row)=>row.carsRemoved),
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1,
+                    backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
                     yAxisID: 'y-cars'
                 },
                 {
                     label: 'Valor Arrecadado (R$)',
                     data: dataGrafico.map((row)=>row.moneyEarned),
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(0, 128, 0, 0.5)',
+                    borderColor: 'rgba(0, 128, 0, 1)',
                     borderWidth: 1,
                     yAxisID: 'y-money'
                 }
@@ -903,7 +899,7 @@ function placaJaExiste(placa) {
     const celulas = document.querySelectorAll("#matriz_vagas td");
     for (let celula of celulas)if (celula.dataset.livre === "false") {
         const carroSpanPlaca = celula.querySelector(".carro span:not(.horario)");
-        if (carroSpanPlaca && carroSpanPlaca.textContent.trim() === placa) return true;
+        if (carroSpanPlaca && carroSpanPlaca.textContent.trim().replace(/-/g, "") === placa.replace(/-/g, "")) return true;
     }
     return false;
 }
@@ -973,10 +969,14 @@ document.getElementById("forms").addEventListener("submit", function(event) {
     if (!placa) return;
     if (!placaValidaSudeste(placa)) {
         document.getElementById("popup-textRepetido").innerHTML = `
-      <strong>Placa inv\xe1lida ou n\xe3o pertence \xe0 Regi\xe3o Sudeste!</strong><br><br>
-      Apenas placas no formato Mercosul (Ex: ABC1D23) de SP, RJ, MG ou ES s\xe3o permitidas.<br><br>
-      <em>"Essa placa n\xe3o est\xe1 nos conformes do Mercosul para esta regi\xe3o, parceiro."</em><br>
-      \u{2014} <strong>Aqui \xe9 so na cariocagem</strong> <em>, man\xe9</em>
+      <strong>Formato de placa inv\xe1lido!</strong><br><br>
+      Por favor, insira uma placa no formato antigo (Ex: ABC-1234)<br>
+      ou Mercosul (Ex: ABC1D23).<br><br>
+      <em>"Essa placa n\xe3o parece correta, chefe."</em><br>
+      Essa fita ai n\xe3o ta correta n\xe3o bigode, bota uma placa v\xe1lida ai tio!!!<br>
+      <br>
+      <br>
+      <strong>Aqui \xe9 so na cariocagem</strong>
     `;
         document.getElementById("popupRepetido").classList.remove("hidden");
         placaInput.focus();
@@ -1007,8 +1007,8 @@ document.getElementById("forms").addEventListener("submit", function(event) {
     vagaAleatoria.dataset.horaEntradaCarro = horaGlobal;
     vagaAleatoria.dataset.minutoEntradaCarro = minutoGlobal;
     vagaAleatoria.dataset.segundoEntradaCarro = segundoGlobal;
-    vagaAleatoria.appendChild(criarCarro(placa, horarioEntradaDisplay));
-    document.getElementById("mensagem").textContent = `Carro com placa ${placa} estacionado \xe0s ${horarioEntradaDisplay}.`;
+    vagaAleatoria.appendChild(criarCarro(placaInput.value.toUpperCase(), horarioEntradaDisplay)); // Usa o valor do input formatado
+    document.getElementById("mensagem").textContent = `Carro com placa ${placaInput.value.toUpperCase()} estacionado \xe0s ${horarioEntradaDisplay}.`;
     placaInput.value = "";
     vagaAleatoria.onclick = function() {
         const entradaStrDisplay = this.dataset.horaEntradaDisplay;
@@ -1023,7 +1023,7 @@ document.getElementById("forms").addEventListener("submit", function(event) {
         const permanenciaH = Math.floor(diffTotalSegundos / 3600);
         const permanenciaM = Math.floor(diffTotalSegundos % 3600 / 60);
         const permanenciaS = diffTotalSegundos % 60;
-        const formatPermanencia = (n)=>n.toString().padStart(2, '0'); // Formatador local para permanência
+        const formatPermanencia = (n)=>n.toString().padStart(2, '0');
         const tempoEstacionadoFormatado = `${formatPermanencia(permanenciaH)}h ${formatPermanencia(permanenciaM)}m ${formatPermanencia(permanenciaS)}s`;
         let preco = 0;
         if (diffMin > 15) {
@@ -1062,7 +1062,7 @@ document.getElementById("btn-retirar").onclick = ()=>{
         }
         valorTotalAcumulado += preco;
         // Atualiza os dados do gráfico
-        const horaDeRetirada = hora; // Usa a hora atual do relógio de display (10-23)
+        const horaDeRetirada = hora;
         const entradaGrafico = dataGrafico.find((d)=>d.hour === horaDeRetirada);
         if (entradaGrafico) {
             entradaGrafico.carsRemoved++;
@@ -1110,127 +1110,293 @@ document.querySelector("#avancar1h").onclick = function() {
     avancarTempo(60);
 };
 function placaValidaSudeste(placaInput) {
-    const placa = placaInput.toUpperCase().replace(/-/g, "");
+    const placaOriginal = placaInput.toUpperCase();
+    const placaSemHifenOuEspaco = placaOriginal.replace(/-/g, "").replace(/\s/g, "");
+    const primeirasTresLetras = placaSemHifenOuEspaco.substring(0, 3);
+    const prefixosSudeste = [
+        // São Paulo (Exemplos - você precisará de uma lista mais completa para precisão)
+        // Formato antigo: BFA-BXZ, CJA-CKZ, DAL-DBZ, EMA-EMY, FRA-FRZ, GMA-GMZ, HTA-HTZ, IAP-IAR, JAN-JAO, KDA-KDZ, LIA-LIZ, MOA-MOZ, NFA-NFZ, OGA-OGZ, QGA-QGZ
+        // Mercosul (Exemplos de sequências que *podem* ser de SP com base na sua lista anterior)
+        "BFA",
+        "BFB",
+        "BFC",
+        "BFD",
+        "BFE",
+        "BFF",
+        "BFG",
+        "BFH",
+        "BFI",
+        "BFJ",
+        "BFK",
+        "BFL",
+        "BFM",
+        "QSA",
+        "QSB",
+        "QSC",
+        "QSD",
+        "QSE",
+        "QSF",
+        "QSG",
+        "QSH",
+        "QSI",
+        "QSJ",
+        "QSK",
+        "QSL",
+        "QSM",
+        "RIA",
+        "RIB",
+        "RIC",
+        "RID",
+        "RIE",
+        "RIF",
+        "RIG",
+        "RIH",
+        "RII",
+        "RIJ",
+        "RIK",
+        "RIL",
+        "RIM",
+        "BRA",
+        "BRB",
+        "BRC",
+        "BRD",
+        // Rio de Janeiro (Exemplos)
+        // Formato antigo: KMF-LVE
+        // Mercosul (Exemplos de sequências que *podem* ser do RJ com base na sua lista anterior)
+        "KMF",
+        "KMG",
+        "KMH",
+        "KMI",
+        "KMJ",
+        "KMK",
+        "KML",
+        "KMM",
+        "KMN",
+        "KMO",
+        "KMP",
+        "KMQ",
+        "KMR",
+        "KMS",
+        "KMT",
+        "KMU",
+        "KMV",
+        "KMW",
+        "KMX",
+        "KMY",
+        "KMZ",
+        "LVA",
+        "LVB",
+        "LVC",
+        "LVD",
+        "LVE",
+        "RIO",
+        "RIW",
+        "RJX",
+        "RKA",
+        "RKB",
+        "RKC",
+        // Minas Gerais (Exemplos)
+        // Formato antigo: GKA-HOK, NHA-NIX, OLA-OMZ, OWA-OXK, PUA-PZZ, QMA-QMP, QQA-QQZ, QUA-QUZ, QWA-QWZ, GXA-GXZ
+        // Mercosul (Exemplos de sequências que *podem* ser de MG com base na sua lista anterior)
+        "QPA",
+        "QPB",
+        "QPC",
+        "QPD",
+        "QPE",
+        "QPF",
+        "QPG",
+        "QPH",
+        "QPI",
+        "QPJ",
+        "QPK",
+        "QPL",
+        "QPM",
+        "RUA",
+        "RUB",
+        "RUC",
+        "RUD",
+        "RUE",
+        "RUF",
+        "RUG",
+        "RUH",
+        "RUI",
+        "RUJ",
+        "RUK",
+        "RUL",
+        "RUM",
+        // Espírito Santo (Exemplos)
+        // Formato antigo: MOA-MTZ (parte dessa faixa é de MG também), ODA-ODZ, OVA-OVZ
+        // Mercosul (Exemplos de sequências que *podem* ser do ES com base na sua lista anterior)
+        "QVA",
+        "QVB",
+        "QVC",
+        "QVD",
+        "QVE",
+        "QVF",
+        "QVG",
+        "QVH",
+        "QVI",
+        "QVJ",
+        "QVK",
+        "QVL",
+        "QVM",
+        "RCA",
+        "RCB",
+        "RCC"
+    ];
+    if (!prefixosSudeste.includes(primeirasTresLetras)) return false;
+    const regexAntigaComHifen = /^[A-Z]{3}-\d{4}$/;
+    const regexAntigaSemHifen = /^[A-Z]{3}\d{4}$/;
     const regexMercosul = /^[A-Z]{3}\d[A-Z]\d{2}$/;
-    if (regexMercosul.test(placa)) {
-        const primeirasletras = placa.substring(0, 3);
-        const prefixosMercosulSudesteExemplos = [
-            // São Paulo 
-            "BRA",
-            "BRB",
-            "BRC",
-            "BRD",
-            "BFA",
-            "BFB",
-            "BFC",
-            "BFD",
-            "BFE",
-            "BFF",
-            "BFG",
-            "BFH",
-            "BFI",
-            "BFJ",
-            "BFK",
-            "BFL",
-            "BFM",
-            "QSA",
-            "QSB",
-            "QSC",
-            "QSD",
-            "QSE",
-            "QSF",
-            "QSG",
-            "QSH",
-            "QSI",
-            "QSJ",
-            "QSK",
-            "QSL",
-            "QSM",
-            "RIA",
-            "RIB",
-            "RIC",
-            "RID",
-            "RIE",
-            "RIF",
-            "RIG",
-            "RIH",
-            "RII",
-            "RIJ",
-            "RIK",
-            "RIL",
-            "RIM",
-            // Rio de Janeiro 
-            "RIO",
-            "RIW",
-            "RJX",
-            "RKA",
-            "RKB",
-            "RKC",
-            "LVA",
-            "LVB",
-            "LVC",
-            "LVD",
-            "LVE",
-            // Minas Gerais
-            "QPA",
-            "QPB",
-            "QPC",
-            "QPD",
-            "QPE",
-            "QPF",
-            "QPG",
-            "QPH",
-            "QPI",
-            "QPJ",
-            "QPK",
-            "QPL",
-            "QPM",
-            "RUA",
-            "RUB",
-            "RUC",
-            "RUD",
-            "RUE",
-            "RUF",
-            "RUG",
-            "RUH",
-            "RUI",
-            "RUJ",
-            "RUK",
-            "RUL",
-            "RUM",
-            // Espírito Santo 
-            "QVA",
-            "QVB",
-            "QVC",
-            "QVD",
-            "QVE",
-            "QVF",
-            "QVG",
-            "QVH",
-            "QVI",
-            "QVJ",
-            "QVK",
-            "QVL",
-            "QVM",
-            "RCA",
-            "RCB",
-            "RCC"
-        ];
-        const primeiraLetraMercosul = primeirasletras[0];
-        const iniciaisComunsMercosul = [
-            'B',
-            'L',
-            'O',
-            'P',
-            'Q',
-            'R'
-        ];
-        if (prefixosMercosulSudesteExemplos.includes(primeirasletras)) {
-            iniciaisComunsMercosul.includes(primeiraLetraMercosul);
-            return true;
-        }
-        return false;
-    }
+    if (regexMercosul.test(placaSemHifenOuEspaco)) return true;
+    if (regexAntigaComHifen.test(placaOriginal)) return true;
+    if (regexAntigaSemHifen.test(placaSemHifenOuEspaco) && !placaOriginal.includes('-')) return true;
+    if (placaOriginal.length === 7 && !placaOriginal.includes('-') && regexAntigaSemHifen.test(placaOriginal)) return true;
+    return false;
+}
+function placaValidaSudeste(placaInput) {
+    const placaOriginal = placaInput.toUpperCase();
+    const placaSemHifenOuEspaco = placaOriginal.replace(/-/g, "").replace(/\s/g, "");
+    const primeirasTresLetras = placaSemHifenOuEspaco.substring(0, 3);
+    const prefixosSudeste = [
+        // São Paulo (Exemplos - você precisará de uma lista mais completa para precisão)
+        // Formato antigo: BFA-BXZ, CJA-CKZ, DAL-DBZ, EMA-EMY, FRA-FRZ, GMA-GMZ, HTA-HTZ, IAP-IAR, JAN-JAO, KDA-KDZ, LIA-LIZ, MOA-MOZ, NFA-NFZ, OGA-OGZ, QGA-QGZ
+        // Mercosul (Exemplos de sequências que *podem* ser de SP com base na sua lista anterior)
+        "BFA",
+        "BFB",
+        "BFC",
+        "BFD",
+        "BFE",
+        "BFF",
+        "BFG",
+        "BFH",
+        "BFI",
+        "BFJ",
+        "BFK",
+        "BFL",
+        "BFM",
+        "QSA",
+        "QSB",
+        "QSC",
+        "QSD",
+        "QSE",
+        "QSF",
+        "QSG",
+        "QSH",
+        "QSI",
+        "QSJ",
+        "QSK",
+        "QSL",
+        "QSM",
+        "RIA",
+        "RIB",
+        "RIC",
+        "RID",
+        "RIE",
+        "RIF",
+        "RIG",
+        "RIH",
+        "RII",
+        "RIJ",
+        "RIK",
+        "RIL",
+        "RIM",
+        "BRA",
+        "BRB",
+        "BRC",
+        "BRD",
+        // Rio de Janeiro (Exemplos)
+        // Formato antigo: KMF-LVE
+        // Mercosul (Exemplos de sequências que *podem* ser do RJ com base na sua lista anterior)
+        "KMF",
+        "KMG",
+        "KMH",
+        "KMI",
+        "KMJ",
+        "KMK",
+        "KML",
+        "KMM",
+        "KMN",
+        "KMO",
+        "KMP",
+        "KMQ",
+        "KMR",
+        "KMS",
+        "KMT",
+        "KMU",
+        "KMV",
+        "KMW",
+        "KMX",
+        "KMY",
+        "KMZ",
+        "LVA",
+        "LVB",
+        "LVC",
+        "LVD",
+        "LVE",
+        "RIO",
+        "RIW",
+        "RJX",
+        "RKA",
+        "RKB",
+        "RKC",
+        // Minas Gerais (Exemplos)
+        // Formato antigo: GKA-HOK, NHA-NIX, OLA-OMZ, OWA-OXK, PUA-PZZ, QMA-QMP, QQA-QQZ, QUA-QUZ, QWA-QWZ, GXA-GXZ
+        // Mercosul (Exemplos de sequências que *podem* ser de MG com base na sua lista anterior)
+        "QPA",
+        "QPB",
+        "QPC",
+        "QPD",
+        "QPE",
+        "QPF",
+        "QPG",
+        "QPH",
+        "QPI",
+        "QPJ",
+        "QPK",
+        "QPL",
+        "QPM",
+        "RUA",
+        "RUB",
+        "RUC",
+        "RUD",
+        "RUE",
+        "RUF",
+        "RUG",
+        "RUH",
+        "RUI",
+        "RUJ",
+        "RUK",
+        "RUL",
+        "RUM",
+        // Espírito Santo (Exemplos)
+        // Formato antigo: MOA-MTZ (parte dessa faixa é de MG também), ODA-ODZ, OVA-OVZ
+        // Mercosul (Exemplos de sequências que *podem* ser do ES com base na sua lista anterior)
+        "QVA",
+        "QVB",
+        "QVC",
+        "QVD",
+        "QVE",
+        "QVF",
+        "QVG",
+        "QVH",
+        "QVI",
+        "QVJ",
+        "QVK",
+        "QVL",
+        "QVM",
+        "RCA",
+        "RCB",
+        "RCC"
+    ];
+    if (!prefixosSudeste.includes(primeirasTresLetras)) return false;
+    const regexAntigaComHifen = /^[A-Z]{3}-\d{4}$/;
+    const regexAntigaSemHifen = /^[A-Z]{3}\d{4}$/;
+    const regexMercosul = /^[A-Z]{3}\d[A-Z]\d{2}$/;
+    if (regexMercosul.test(placaSemHifenOuEspaco)) return true;
+    if (regexAntigaComHifen.test(placaOriginal)) return true;
+    if (regexAntigaSemHifen.test(placaSemHifenOuEspaco) && !placaOriginal.includes('-')) return true;
+    if (placaOriginal.length === 7 && !placaOriginal.includes('-') && regexAntigaSemHifen.test(placaOriginal)) return true;
     return false;
 }
 

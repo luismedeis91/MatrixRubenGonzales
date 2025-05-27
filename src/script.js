@@ -15,50 +15,46 @@ let horaGlobal = 0;
 let minutoGlobal = 0;
 let segundoGlobal = 0;
 
-// Estrutura de dados para o gráfico
+
 const dataGrafico = [];
 for (let h = 10; h <= 23; h++) {
     dataGrafico.push({ hour: h, carsRemoved: 0, moneyEarned: 0 });
 }
 
-let myChart; // Variável global para a instância do gráfico
+let myChart; 
 
 window.onload = function () {
   tabela = document.getElementById("matriz_vagas");
   criarMatriz();
 
-   const placaInput = document.getElementById("placa");
+  const placaInput = document.getElementById("placa");
 
   placaInput.addEventListener("input", function (e) {
     let value = e.target.value.toUpperCase();
     const originalCursorPosition = e.target.selectionStart;
     let newCursorPosition = originalCursorPosition;
-
     let processedValue = "";
 
     
     if (value.length === 4 && value[3] !== '-' &&
-        /^[A-Z]{3}$/.test(value.substring(0, 3)) && 
-        /^\d$/.test(value[3])) {                  
+        /^[A-Z]{3}$/.test(value.substring(0, 3)) &&
+        /^\d$/.test(value[3])) {
       value = value.substring(0, 3) + '-' + value[3];
-  
       if (originalCursorPosition === 4) {
-        newCursorPosition = 5; 
+        newCursorPosition = 5; // Pula o hífen
       }
     }
 
     let tempValue = "";
-    let hyphenInsertedByLogic = false; 
-
     for (let i = 0; i < value.length; i++) {
         const char = value[i];
         const currentLength = tempValue.length;
 
-        if (currentLength < 3) { 
+        if (currentLength < 3) { // Primeiras 3 letras
             if (/[A-Z]/.test(char)) {
                 tempValue += char;
             } else {
-                if (originalCursorPosition > i) newCursorPosition--; 
+                if (originalCursorPosition > i) newCursorPosition--;
             }
         } else if (currentLength === 3) { 
             if (char === '-' && !tempValue.includes('-')) { 
@@ -68,63 +64,51 @@ window.onload = function () {
             } else {
                 if (originalCursorPosition > i) newCursorPosition--;
             }
-        } else if (currentLength === 4 && tempValue.includes('-')) {
-            if (/\d/.test(char)) { // Deve ser número
+        } else if (tempValue.includes('-')) { 
+            if (tempValue.length < 8 && /\d/.test(char)) { // 
                 tempValue += char;
             } else {
                 if (originalCursorPosition > i) newCursorPosition--;
             }
-        } else if (currentLength === 4 && !tempValue.includes('-')) { 
-             if (/[A-Z]/.test(char) && /\d$/.test(tempValue[3])) { 
-                tempValue += char;
-            } else {
-                if (originalCursorPosition > i) newCursorPosition--;
+        } else {
+            
+            if (currentLength === 3 && /\d/.test(char) && /^[A-Z]{3}$/.test(tempValue)) {
+                 tempValue += char;
             }
-        } else if (currentLength > 4) { 
-            if (tempValue.includes('-')) { 
-                if (/\d/.test(char)) {
-                    tempValue += char;
-                } else {
-                   if (originalCursorPosition > i) newCursorPosition--;
-                }
-            } else { // Formato LLLNLN... (Mercosul)
-                if (/\d/.test(char) && /[A-Z]$/.test(tempValue[tempValue.length-1]) && tempValue.length == 5) { // LLLNLN (NÚMERO após LETRA)
-                     tempValue += char;
-                } else if (/\d$/.test(tempValue[tempValue.length-1]) && tempValue.length == 6 && /\d/.test(char)) { // LLLNLNN (NÚMERO após NÚMERO)
-                     tempValue += char;
-                }
-                 else {
-                   if (originalCursorPosition > i) newCursorPosition--;
-                }
+            else if (currentLength === 4 && /[A-Z]/.test(char) && /^[A-Z]{3}\d$/.test(tempValue)) {
+                 tempValue += char;
+            }
+            
+            else if (currentLength === 5 && /\d/.test(char) && /^[A-Z]{3}\d[A-Z]$/.test(tempValue)) {
+                 tempValue += char;
+            }
+            
+            else if (currentLength === 6 && /\d/.test(char) && /^[A-Z]{3}\d[A-Z]\d$/.test(tempValue)) {
+                 tempValue += char;
+            } else {
+                if (originalCursorPosition > i && tempValue.length < 7) newCursorPosition--; // Apenas ajusta se não estiver no limite
             }
         }
     }
     processedValue = tempValue;
 
+    // Limita o tamanho máximo
+    if (processedValue.includes('-')) {
+        if (processedValue.length > 8) processedValue = processedValue.substring(0, 8); // LLL-NNNN
+    } else {
+        if (processedValue.length > 7) processedValue = processedValue.substring(0, 7); // LLLNLNN
+    }
 
     if (e.target.value !== processedValue) {
         e.target.value = processedValue;
-      
+        // Tenta restaurar a posição do cursor de forma inteligente
         if (value.length > e.target.value.length && originalCursorPosition > processedValue.length) {
              e.target.setSelectionRange(processedValue.length, processedValue.length);
         } else {
              e.target.setSelectionRange(newCursorPosition, newCursorPosition);
         }
     }
-  })
-
-
-
-
-
-
-
-
-
-
-
-
-
+  });
 
   document.getElementById("btn-fechar").onclick = () => {
     document.getElementById("popup").classList.add("hidden");
@@ -153,16 +137,16 @@ window.onload = function () {
         {
           label: 'Carros Retirados',
           data: dataGrafico.map(row => row.carsRemoved),
-          backgroundColor: 'rgba(255, 99, 132, 0.5)', // Vermelho para carros
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
+          backgroundColor: 'rgba(153, 102, 255, 0.5)', 
+          borderColor: 'rgba(153, 102, 255, 1)',     
           yAxisID: 'y-cars',
         },
         {
           label: 'Valor Arrecadado (R$)',
           data: dataGrafico.map(row => row.moneyEarned),
-          backgroundColor: 'rgba(54, 162, 235, 0.5)', 
-          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(0, 128, 0, 0.5)',
+          borderColor: 'rgba(0, 128, 0, 1)',      // Verde opaco
+      
           borderWidth: 1,
           yAxisID: 'y-money',
         }
@@ -174,7 +158,7 @@ window.onload = function () {
         mode: 'index',
         intersect: false,
       },
-      stacked: false, 
+      stacked: false,
       scales: {
         x: {
           title: {
@@ -182,7 +166,7 @@ window.onload = function () {
             text: 'Hora do Dia'
           }
         },
-        'y-cars': { 
+        'y-cars': {
           type: 'linear',
           display: true,
           position: 'left',
@@ -192,10 +176,10 @@ window.onload = function () {
             text: 'Quantidade de Carros Retirados'
           },
           ticks: {
-            stepSize: 1 
+            stepSize: 1
           }
         },
-        'y-money': { 
+        'y-money': {
           type: 'linear',
           display: true,
           position: 'right',
@@ -205,8 +189,7 @@ window.onload = function () {
             text: 'Valor Arrecadado (R$)'
           },
           grid: {
-            drawOnChartArea: false, 
-            
+            drawOnChartArea: false,
           },
         }
       },
@@ -288,7 +271,7 @@ function placaJaExiste(placa) {
   for (let celula of celulas) {
     if (celula.dataset.livre === "false") {
       const carroSpanPlaca = celula.querySelector(".carro span:not(.horario)");
-      if (carroSpanPlaca && carroSpanPlaca.textContent.trim() === placa) {
+      if (carroSpanPlaca && carroSpanPlaca.textContent.trim().replace(/-/g, "") === placa.replace(/-/g, "")) {
         return true;
       }
     }
@@ -326,7 +309,7 @@ function atualizarRelogioGlobal() {
       horaGlobal++;
     }
   }
-  
+
   atualizarRelogioEmCarros();
 }
 
@@ -353,7 +336,7 @@ function atualizarRelogioEmCarros() {
       const permanenciaH = Math.floor(permanenciaTotalSegundos / 3600);
       const permanenciaM = Math.floor((permanenciaTotalSegundos % 3600) / 60);
       const permanenciaS = permanenciaTotalSegundos % 60;
-      
+
       carroTimeDisplay.textContent = `${format(permanenciaH)}:${format(permanenciaM)}:${format(permanenciaS)}`;
     }
   }
@@ -370,7 +353,7 @@ function avancarTempo(minutosAvanco) {
       hora = 10;
     }
   }
-  
+
   minutoGlobal += minutosAvanco;
   while (minutoGlobal >= 60) {
     minutoGlobal -= 60;
@@ -388,18 +371,19 @@ document.getElementById("forms").addEventListener("submit", function (event) {
 
   if (!placaValidaSudeste(placa)) {
     document.getElementById("popup-textRepetido").innerHTML = `
-      <strong>Placa inválida ou não pertence à Região Sudeste!</strong><br><br>
-      Apenas placas no formato Mercosul (Ex: ABC1D23) de SP, RJ, MG ou ES são permitidas.<br><br>
-      <em>"Essa placa não está nos conformes do Mercosul para esta região, parceiro."</em><br>
-      — <strong>Aqui é so na cariocagem</strong> <em>, mané</em>
+      <strong>Formato de placa inválido!</strong><br><br>
+      Por favor, insira uma placa no formato antigo (Ex: ABC-1234)<br>
+      ou Mercosul (Ex: ABC1D23).<br><br>
+      <em>"Essa placa não parece correta, chefe."</em><br>
+      Essa fita ai não ta correta não bigode, bota uma placa válida ai tio!!!<br>
+      <br>
+      <br>
+      <strong>Aqui é so na cariocagem</strong>
     `;
     document.getElementById("popupRepetido").classList.remove("hidden");
     placaInput.focus();
     return;
   }
-
-
-
 
   if (placaJaExiste(placa)) {
     document.getElementById("popup-textRepetido").innerHTML = `
@@ -432,9 +416,9 @@ document.getElementById("forms").addEventListener("submit", function (event) {
   vagaAleatoria.dataset.minutoEntradaCarro = minutoGlobal;
   vagaAleatoria.dataset.segundoEntradaCarro = segundoGlobal;
 
-  vagaAleatoria.appendChild(criarCarro(placa, horarioEntradaDisplay));
+  vagaAleatoria.appendChild(criarCarro(placaInput.value.toUpperCase(), horarioEntradaDisplay)); // Usa o valor do input formatado
 
-  document.getElementById("mensagem").textContent = `Carro com placa ${placa} estacionado às ${horarioEntradaDisplay}.`;
+  document.getElementById("mensagem").textContent = `Carro com placa ${placaInput.value.toUpperCase()} estacionado às ${horarioEntradaDisplay}.`;
   placaInput.value = "";
 
   vagaAleatoria.onclick = function () {
@@ -451,15 +435,14 @@ document.getElementById("forms").addEventListener("submit", function (event) {
     if (diffTotalSegundos < 0) {
         diffTotalSegundos = 0;
     }
-    
+
     const diffMin = Math.floor(diffTotalSegundos / 60);
 
     const permanenciaH = Math.floor(diffTotalSegundos / 3600);
     const permanenciaM = Math.floor((diffTotalSegundos % 3600) / 60);
     const permanenciaS = diffTotalSegundos % 60;
-    const formatPermanencia = (n) => n.toString().padStart(2, '0'); // Formatador local para permanência
+    const formatPermanencia = (n) => n.toString().padStart(2, '0');
     const tempoEstacionadoFormatado = `${formatPermanencia(permanenciaH)}h ${formatPermanencia(permanenciaM)}m ${formatPermanencia(permanenciaS)}s`;
-
 
     let preco = 0;
     if (diffMin > 15) {
@@ -517,7 +500,7 @@ document.getElementById("btn-retirar").onclick = () => {
     valorTotalAcumulado += preco;
 
     // Atualiza os dados do gráfico
-    const horaDeRetirada = hora; // Usa a hora atual do relógio de display (10-23)
+    const horaDeRetirada = hora;
     const entradaGrafico = dataGrafico.find(d => d.hour === horaDeRetirada);
     if (entradaGrafico) {
       entradaGrafico.carsRemoved++;
@@ -558,7 +541,6 @@ document.getElementById("btn-retirar").onclick = () => {
     delete popupCelulaAtiva.dataset.minutoEntradaCarro;
     delete popupCelulaAtiva.dataset.segundoEntradaCarro;
 
-
     document.getElementById("popup").classList.add("hidden");
     document.getElementById("mensagem").textContent = `Carro com placa ${popupPlacaAtiva} foi retirado. Valor: R$ ${preco.toFixed(2)}.`;
 
@@ -579,47 +561,126 @@ document.querySelector("#avancar1h").onclick = function(){
   avancarTempo(60);
 }
 
-
-
 function placaValidaSudeste(placaInput){
-    const placa = placaInput.toUpperCase().replace(/-/g, "")
+    const placaOriginal = placaInput.toUpperCase();
+    const placaSemHifenOuEspaco = placaOriginal.replace(/-/g, "").replace(/\s/g, "");
 
-    const regexMercosul = /^[A-Z]{3}\d[A-Z]\d{2}$/
+    const primeirasTresLetras = placaSemHifenOuEspaco.substring(0, 3);
 
-    if(regexMercosul.test(placa)){
-        const primeirasletras = placa.substring(0,3)
-        
-         const prefixosMercosulSudesteExemplos = [
-            // São Paulo 
-            "BRA", "BRB", "BRC", "BRD", 
-            "BFA", "BFB", "BFC", "BFD", "BFE", "BFF", "BFG", "BFH", "BFI", "BFJ", "BFK", "BFL", "BFM",
-            "QSA", "QSB", "QSC", "QSD", "QSE", "QSF", "QSG", "QSH", "QSI", "QSJ", "QSK", "QSL", "QSM",
-            "RIA", "RIB", "RIC", "RID", "RIE", "RIF", "RIG", "RIH", "RII", "RIJ", "RIK", "RIL", "RIM",
-            // Rio de Janeiro 
-            "RIO", "RIW", "RJX", "RKA", "RKB", "RKC", "LVA", "LVB", "LVC", "LVD", "LVE",
-            // Minas Gerais
-            "QPA", "QPB", "QPC", "QPD", "QPE", "QPF", "QPG", "QPH", "QPI", "QPJ", "QPK", "QPL", "QPM",
-            "RUA", "RUB", "RUC", "RUD", "RUE", "RUF", "RUG", "RUH", "RUI", "RUJ", "RUK", "RUL", "RUM",
-            // Espírito Santo 
-            "QVA", "QVB", "QVC", "QVD", "QVE", "QVF", "QVG", "QVH", "QVI", "QVJ", "QVK", "QVL", "QVM",
-            "RCA", "RCB", "RCC"
-           
-        ];
+    const prefixosSudeste = [
+        // São Paulo (Exemplos - você precisará de uma lista mais completa para precisão)
+        // Formato antigo: BFA-BXZ, CJA-CKZ, DAL-DBZ, EMA-EMY, FRA-FRZ, GMA-GMZ, HTA-HTZ, IAP-IAR, JAN-JAO, KDA-KDZ, LIA-LIZ, MOA-MOZ, NFA-NFZ, OGA-OGZ, QGA-QGZ
+        // Mercosul (Exemplos de sequências que *podem* ser de SP com base na sua lista anterior)
+        "BFA", "BFB", "BFC", "BFD", "BFE", "BFF", "BFG", "BFH", "BFI", "BFJ", "BFK", "BFL", "BFM",
+        "QSA", "QSB", "QSC", "QSD", "QSE", "QSF", "QSG", "QSH", "QSI", "QSJ", "QSK", "QSL", "QSM",
+        "RIA", "RIB", "RIC", "RID", "RIE", "RIF", "RIG", "RIH", "RII", "RIJ", "RIK", "RIL", "RIM",
+        "BRA", "BRB", "BRC", "BRD", // Adicionados da sua lista anterior para SP
+
+        // Rio de Janeiro (Exemplos)
+        // Formato antigo: KMF-LVE
+        // Mercosul (Exemplos de sequências que *podem* ser do RJ com base na sua lista anterior)
+        "KMF", "KMG", "KMH", "KMI", "KMJ", "KMK", "KML", "KMM", "KMN", "KMO", "KMP", "KMQ", "KMR", "KMS", "KMT", "KMU", "KMV", "KMW", "KMX", "KMY", "KMZ",
+        "LVA", "LVB", "LVC", "LVD", "LVE",
+        "RIO", "RIW", "RJX", "RKA", "RKB", "RKC", // Adicionados da sua lista anterior para RJ
 
 
-        const primeiraLetraMercosul = primeirasletras[0]
-        const iniciaisComunsMercosul = ['B', 'L', 'O', 'P', 'Q', 'R'];
+        // Minas Gerais (Exemplos)
+        // Formato antigo: GKA-HOK, NHA-NIX, OLA-OMZ, OWA-OXK, PUA-PZZ, QMA-QMP, QQA-QQZ, QUA-QUZ, QWA-QWZ, GXA-GXZ
+        // Mercosul (Exemplos de sequências que *podem* ser de MG com base na sua lista anterior)
+        "QPA", "QPB", "QPC", "QPD", "QPE", "QPF", "QPG", "QPH", "QPI", "QPJ", "QPK", "QPL", "QPM",
+        "RUA", "RUB", "RUC", "RUD", "RUE", "RUF", "RUG", "RUH", "RUI", "RUJ", "RUK", "RUL", "RUM",
 
-        if(prefixosMercosulSudesteExemplos.includes(primeirasletras)){
-            iniciaisComunsMercosul.includes(primeiraLetraMercosul)
-            return true
-        }
+        // Espírito Santo (Exemplos)
+        // Formato antigo: MOA-MTZ (parte dessa faixa é de MG também), ODA-ODZ, OVA-OVZ
+        // Mercosul (Exemplos de sequências que *podem* ser do ES com base na sua lista anterior)
+        "QVA", "QVB", "QVC", "QVD", "QVE", "QVF", "QVG", "QVH", "QVI", "QVJ", "QVK", "QVL", "QVM",
+        "RCA", "RCB", "RCC"
+    ];
 
-
-        return false
-
+    if (!prefixosSudeste.includes(primeirasTresLetras)) {
+        return false;
     }
 
-    return false
+    const regexAntigaComHifen = /^[A-Z]{3}-\d{4}$/;
+    const regexAntigaSemHifen = /^[A-Z]{3}\d{4}$/;
+    const regexMercosul = /^[A-Z]{3}\d[A-Z]\d{2}$/;
+
+    if (regexMercosul.test(placaSemHifenOuEspaco)) {
+        return true;
+    }
+
+    if (regexAntigaComHifen.test(placaOriginal)) {
+        return true;
+    }
+
+    if (regexAntigaSemHifen.test(placaSemHifenOuEspaco) && !placaOriginal.includes('-')) {
+        return true;
+    }
     
+    if (placaOriginal.length === 7 && !placaOriginal.includes('-') && regexAntigaSemHifen.test(placaOriginal)) {
+        return true;
+    }
+
+    return false;
+}function placaValidaSudeste(placaInput){
+    const placaOriginal = placaInput.toUpperCase();
+    const placaSemHifenOuEspaco = placaOriginal.replace(/-/g, "").replace(/\s/g, "");
+
+    const primeirasTresLetras = placaSemHifenOuEspaco.substring(0, 3);
+
+    const prefixosSudeste = [
+        // São Paulo (Exemplos - você precisará de uma lista mais completa para precisão)
+        // Formato antigo: BFA-BXZ, CJA-CKZ, DAL-DBZ, EMA-EMY, FRA-FRZ, GMA-GMZ, HTA-HTZ, IAP-IAR, JAN-JAO, KDA-KDZ, LIA-LIZ, MOA-MOZ, NFA-NFZ, OGA-OGZ, QGA-QGZ
+        // Mercosul (Exemplos de sequências que *podem* ser de SP com base na sua lista anterior)
+        "BFA", "BFB", "BFC", "BFD", "BFE", "BFF", "BFG", "BFH", "BFI", "BFJ", "BFK", "BFL", "BFM",
+        "QSA", "QSB", "QSC", "QSD", "QSE", "QSF", "QSG", "QSH", "QSI", "QSJ", "QSK", "QSL", "QSM",
+        "RIA", "RIB", "RIC", "RID", "RIE", "RIF", "RIG", "RIH", "RII", "RIJ", "RIK", "RIL", "RIM",
+        "BRA", "BRB", "BRC", "BRD", // Adicionados da sua lista anterior para SP
+
+        // Rio de Janeiro (Exemplos)
+        // Formato antigo: KMF-LVE
+        // Mercosul (Exemplos de sequências que *podem* ser do RJ com base na sua lista anterior)
+        "KMF", "KMG", "KMH", "KMI", "KMJ", "KMK", "KML", "KMM", "KMN", "KMO", "KMP", "KMQ", "KMR", "KMS", "KMT", "KMU", "KMV", "KMW", "KMX", "KMY", "KMZ",
+        "LVA", "LVB", "LVC", "LVD", "LVE",
+        "RIO", "RIW", "RJX", "RKA", "RKB", "RKC", // Adicionados da sua lista anterior para RJ
+
+
+        // Minas Gerais (Exemplos)
+        // Formato antigo: GKA-HOK, NHA-NIX, OLA-OMZ, OWA-OXK, PUA-PZZ, QMA-QMP, QQA-QQZ, QUA-QUZ, QWA-QWZ, GXA-GXZ
+        // Mercosul (Exemplos de sequências que *podem* ser de MG com base na sua lista anterior)
+        "QPA", "QPB", "QPC", "QPD", "QPE", "QPF", "QPG", "QPH", "QPI", "QPJ", "QPK", "QPL", "QPM",
+        "RUA", "RUB", "RUC", "RUD", "RUE", "RUF", "RUG", "RUH", "RUI", "RUJ", "RUK", "RUL", "RUM",
+
+        // Espírito Santo (Exemplos)
+        // Formato antigo: MOA-MTZ (parte dessa faixa é de MG também), ODA-ODZ, OVA-OVZ
+        // Mercosul (Exemplos de sequências que *podem* ser do ES com base na sua lista anterior)
+        "QVA", "QVB", "QVC", "QVD", "QVE", "QVF", "QVG", "QVH", "QVI", "QVJ", "QVK", "QVL", "QVM",
+        "RCA", "RCB", "RCC"
+    ];
+
+    if (!prefixosSudeste.includes(primeirasTresLetras)) {
+        return false;
+    }
+
+    const regexAntigaComHifen = /^[A-Z]{3}-\d{4}$/;
+    const regexAntigaSemHifen = /^[A-Z]{3}\d{4}$/;
+    const regexMercosul = /^[A-Z]{3}\d[A-Z]\d{2}$/;
+
+    if (regexMercosul.test(placaSemHifenOuEspaco)) {
+        return true;
+    }
+
+    if (regexAntigaComHifen.test(placaOriginal)) {
+        return true;
+    }
+
+    if (regexAntigaSemHifen.test(placaSemHifenOuEspaco) && !placaOriginal.includes('-')) {
+        return true;
+    }
+    
+    if (placaOriginal.length === 7 && !placaOriginal.includes('-') && regexAntigaSemHifen.test(placaOriginal)) {
+        return true;
+    }
+
+    return false;
 }
