@@ -75,7 +75,7 @@ form {
   flex-direction: column;
   align-items: center;
   gap: 1vh;
-  margin-bottom: 3vh;
+  margin-bottom: 1vh;
   display: flex;
 }
 
@@ -101,6 +101,16 @@ button {
   padding: 1.5vh 2vw;
   font-size: 1.8vh;
   transition: background-color .3s;
+}
+
+#emulador {
+  margin-top: 30px;
+}
+
+.controls-left {
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 button:hover {
@@ -156,6 +166,13 @@ td:hover {
   cursor: pointer;
   background-color: #3a3a3a;
   transform: scale(1.05);
+}
+
+.matrix-box {
+  justify-content: center;
+  align-items: center;
+  margin-top: 200px;
+  display: flex;
 }
 
 footer {

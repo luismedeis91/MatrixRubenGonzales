@@ -46,8 +46,6 @@
         </section>
     </header>
 
-    <div style="width: 800px"><canvas id="acquisitions"></canvas></div>
-
     <main>
         <div id="relogio-container">
             <div id="relogio">10:00:00</div>
@@ -68,15 +66,18 @@
             <div class="controls-left">
                 <button id="btn-verHistorico">Ver Histórico</button>
             </div>
-            <div class="matrix-section">
-                <div id="mensagem"></div>
-                <h2>Matriz de Vagas</h2>
-                <table id="matriz_vagas" class="animate__animate animate__fadeInUp"></table>
+            <div class="matrix-box">
+                <div style="width: 800px"><canvas id="acquisitions"></canvas></div>
+                <div class="matrix-section">
+                    <div id="mensagem"></div>
+                    <h2>Matriz de Vagas</h2>
+                    <table id="matriz_vagas" class="animate__animate animate__fadeInUp"></table>
+                </div>
             </div>
         </div>
 
         <!-- Emulador aqui -->
-        <button onclick="abrirJanela()">Abrir Emulador</button>
+        <button id="emulador" onclick="abrirJanela()">Abrir Emulador</button>
 
         <script>function abrirJanela() {
     const largura = 480;

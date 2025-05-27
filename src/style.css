@@ -81,7 +81,7 @@ main {
 
 
 form {
-  margin-bottom: 3vh;
+  margin-bottom: 1vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -110,6 +110,16 @@ button {
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+#emulador {
+  margin-top: 30px;
+}
+
+.controls-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 button:hover {
@@ -170,6 +180,13 @@ td:hover {
   transform: scale(1.05);
   background-color: #3a3a3a;
   cursor: pointer;
+}
+
+.matrix-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 200px;
 }
 
 
