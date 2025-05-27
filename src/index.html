@@ -80,6 +80,7 @@
 
         <!-- Emulador aqui -->
         <button onclick="abrirJanela()">Abrir Emulador</button>
+
         <script>
         function abrirJanela() {
             const largura = 480;
@@ -92,7 +93,9 @@
                         `resizable=no,scrollbars=no,toolbar=no,menubar=no,` +
                         `location=no,status=no`;
 
-            const janela = window.open('gba/tela.html', 'Emulador', opcoes);
+            const urlGitHub = 'https://luisaugusto2005.github.io/IMGs-Test/';
+
+            const janela = window.open(urlGitHub, 'GitHub Pages', opcoes);
 
             if (janela) {
                 janela.moveTo(esquerda, topo);
