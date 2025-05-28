@@ -36,14 +36,7 @@ window.onload = function () {
     let processedValue = "";
 
     
-    if (value.length === 4 && value[3] !== '-' &&
-        /^[A-Z]{3}$/.test(value.substring(0, 3)) &&
-        /^\d$/.test(value[3])) {
-      value = value.substring(0, 3) + '-' + value[3];
-      if (originalCursorPosition === 4) {
-        newCursorPosition = 5; // Pula o hífen
-      }
-    }
+    
 
     let tempValue = "";
     for (let i = 0; i < value.length; i++) {

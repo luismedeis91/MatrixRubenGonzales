@@ -12,6 +12,8 @@ function placaValidaSudeste(placaInput){
             "BFA", "BFB", "BFC", "BFD", "BFE", "BFF", "BFG", "BFH", "BFI", "BFJ", "BFK", "BFL", "BFM",
             "QSA", "QSB", "QSC", "QSD", "QSE", "QSF", "QSG", "QSH", "QSI", "QSJ", "QSK", "QSL", "QSM",
             "RIA", "RIB", "RIC", "RID", "RIE", "RIF", "RIG", "RIH", "RII", "RIJ", "RIK", "RIL", "RIM",
+            "BHA", "BHB", "BHC", "BHD", "BHE", "BHF", "BHG", "BHH", "BHI", "BHJ", "BHK", "BHL", "BHM",
+            "QSN", "QSO", "QSP", "QSQ"
             // Rio de Janeiro 
             "RIO", "RIW", "RJX", "RKA", "RKB", "RKC", "LVA", "LVB", "LVC", "LVD", "LVE",
             // Minas Gerais
@@ -20,7 +22,7 @@ function placaValidaSudeste(placaInput){
             // Espírito Santo 
             "QVA", "QVB", "QVC", "QVD", "QVE", "QVF", "QVG", "QVH", "QVI", "QVJ", "QVK", "QVL", "QVM",
             "RCA", "RCB", "RCC"
-           
+        
         ];
 
 
