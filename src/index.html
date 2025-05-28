@@ -89,21 +89,29 @@
                 const esquerda = (window.screen.width - largura) / 2;
                 const topo = (window.screen.height - altura) / 2;
 
-                const opcoes = `width=${largura},height=${altura},` +
-                    `left=${esquerda},top=${topo},` +
-                    `resizable=no,scrollbars=no,toolbar=no,menubar=no,` +
-                    `location=no,status=no`;
-
-                const urlGitHub = 'https://luisaugusto2005.github.io/IMGs-Test/tela.html';
-
+                const opcoes = `width=${largura},height=${altura},left=${esquerda},top=${topo},resizable=no,scrollbars=no,toolbar=no,menubar=no,location=no,status=no`;
+                const urlGitHub = 'https://luisaugusto2005.github.io/IMGs-Test';
                 const janela = window.open(urlGitHub, 'GitHub Pages', opcoes);
 
                 if (janela) {
                     janela.moveTo(esquerda, topo);
                     janela.resizeTo(largura, altura);
+
+                    const enviarHorario = () => {
+                        const textoRelogio = document.getElementById('relogio').innerText;
+                        const partes = textoRelogio.split(':');
+                        const horaSimulada = parseInt(partes[0]);
+                        
+                        console.log("Enviando hora simulada:", horaSimulada);
+                        janela.postMessage({ tipo: 'hora', valor: horaSimulada }, '*');
+                    };
+
+
+                    setTimeout(enviarHorario, 1000);
                 }
             }
         </script>
+
 
     </main>
 
