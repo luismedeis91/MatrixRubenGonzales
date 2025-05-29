@@ -448,7 +448,7 @@ document.getElementById("forms").addEventListener("submit", function (event) {
     const tempoEstacionadoFormatado = `${formatPermanencia(permanenciaH)}h ${formatPermanencia(permanenciaM)}m ${formatPermanencia(permanenciaS)}s`;
 
     let preco = 0;
-    if (diffMin > 15) {
+    if (diffMin > 14) {
       const horasFracionadas = diffMin / 60.0;
       const horasCobradas = Math.ceil(horasFracionadas);
       preco = 10;
