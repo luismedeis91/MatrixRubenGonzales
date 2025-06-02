@@ -372,6 +372,15 @@ document.getElementById("forms").addEventListener("submit", function (event) {
     return;
   }
 
+  if(placa == "LUIS"){
+    document.getElementById("popup-textRepetido").innerHTML = `
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/gvXE17Zsg60?si=PvjpnIQDN7juoVB-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    `
+    document.getElementById("popupRepetido").classList.remove("hidden");
+    placaInput.focus();
+    return;
+  }
+
   if (!placaValidaSudeste(placa)) {
     document.getElementById("popup-textRepetido").innerHTML = `
       <strong>Formato de placa inválido!</strong><br><br>

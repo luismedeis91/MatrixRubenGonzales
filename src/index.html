@@ -83,34 +83,35 @@
         <button id="emulador" onclick="abrirJanela()">Abrir Emulador</button>
 
         <script>
-            function abrirJanela() {
-                const largura = 920;
-                const altura = 1080;
-                const esquerda = (window.screen.width - largura) / 2;
-                const topo = (window.screen.height - altura) / 2;
+    function abrirJanela() {
+    const urlGitHub = 'https://luisaugusto2005.github.io/IMGs-Test';
 
-                const opcoes = `width=${largura},height=${altura},left=${esquerda},top=${topo},resizable=no,scrollbars=no,toolbar=no,menubar=no,location=no,status=no`;
-                const urlGitHub = 'https://luisaugusto2005.github.io/IMGs-Test';
-                const janela = window.open(urlGitHub, 'GitHub Pages', opcoes);
+    document.getElementById("popup-textRepetido").innerHTML = `
+        <iframe 
+            src="${urlGitHub}" 
+            title="Emulador GBA"
+            width="960"
+            height="720"
+            style="border: none; display: block;"
+            allowfullscreen
+        ></iframe>
+    `;
 
-                if (janela) {
-                    janela.moveTo(esquerda, topo);
-                    janela.resizeTo(largura, altura);
+    document.getElementById("popupRepetido").classList.remove("hidden");
 
-                    const enviarHorario = () => {
-                        const textoRelogio = document.getElementById('relogio').innerText;
-                        const partes = textoRelogio.split(':');
-                        const horaSimulada = parseInt(partes[0]);
-                        
-                        console.log("Enviando hora simulada:", horaSimulada);
-                        janela.postMessage({ tipo: 'hora', valor: horaSimulada }, '*');
-                    };
+    setTimeout(() => {
+        const textoRelogio = document.getElementById('relogio').innerText;
+        const partes = textoRelogio.split(':');
+        const horaSimulada = parseInt(partes[0]);
+        console.log("Enviando hora simulada:", horaSimulada);
 
+        const iframe = document.querySelector('#popup-textRepetido iframe');
+        iframe.contentWindow.postMessage({ tipo: 'hora', valor: horaSimulada }, '*');
+    }, 1000);
+}
 
-                    setTimeout(enviarHorario, 1000);
-                }
-            }
-        </script>
+</script>
+
 
 
     </main>
