@@ -31,83 +31,75 @@ window.onload = function () {
 
   placaInput.addEventListener("input", function (e) {
     let value = e.target.value.toUpperCase();
-    const originalCursorPosition = e.target.selectionStart;
-    let newCursorPosition = originalCursorPosition;
-    let processedValue = "";
+    // const originalCursorPosition = e.target.selectionStart;
+    // let newCursorPosition = originalCursorPosition;
+    // let processedValue = "";
 
     
-    if (value.length === 4 && value[3] !== '-' &&
-        /^[A-Z]{3}$/.test(value.substring(0, 3)) &&
-        /^\d$/.test(value[3])) {
-      value = value.substring(0, 3) + '-' + value[3];
-      if (originalCursorPosition === 4) {
-        newCursorPosition = 5; // Pula o hífen
-      }
-    }
 
-    let tempValue = "";
-    for (let i = 0; i < value.length; i++) {
-        const char = value[i];
-        const currentLength = tempValue.length;
+    // let tempValue = "";
+    // for (let i = 0; i < value.length; i++) {
+    //     const char = value[i];
+    //     const currentLength = tempValue.length;
 
-        if (currentLength < 3) { // Primeiras 3 letras
-            if (/[A-Z]/.test(char)) {
-                tempValue += char;
-            } else {
-                if (originalCursorPosition > i) newCursorPosition--;
-            }
-        } else if (currentLength === 3) { 
-            if (char === '-' && !tempValue.includes('-')) { 
-                tempValue += char;
-            } else if (/[A-Z0-9]/.test(char)) { 
-                tempValue += char;
-            } else {
-                if (originalCursorPosition > i) newCursorPosition--;
-            }
-        } else if (tempValue.includes('-')) { 
-            if (tempValue.length < 8 && /\d/.test(char)) { // 
-                tempValue += char;
-            } else {
-                if (originalCursorPosition > i) newCursorPosition--;
-            }
-        } else {
+    //     if (currentLength < 3) { // Primeiras 3 letras
+    //         if (/[A-Z]/.test(char)) {
+    //             tempValue += char;
+    //         } else {
+    //             if (originalCursorPosition > i) newCursorPosition--;
+    //         }
+    //     } else if (currentLength === 3) { 
+    //         if (char === '-' && !tempValue.includes('-')) { 
+    //             tempValue += char;
+    //         } else if (/[A-Z0-9]/.test(char)) { 
+    //             tempValue += char;
+    //         } else {
+    //             if (originalCursorPosition > i) newCursorPosition--;
+    //         }
+    //     } else if (tempValue.includes('-')) { 
+    //         if (tempValue.length < 8 && /\d/.test(char)) { // 
+    //             tempValue += char;
+    //         } else {
+    //             if (originalCursorPosition > i) newCursorPosition--;
+    //         }
+    //     } else {
             
-            if (currentLength === 3 && /\d/.test(char) && /^[A-Z]{3}$/.test(tempValue)) {
-                 tempValue += char;
-            }
-            else if (currentLength === 4 && /[A-Z]/.test(char) && /^[A-Z]{3}\d$/.test(tempValue)) {
-                 tempValue += char;
-            }
+    //         if (currentLength === 3 && /\d/.test(char) && /^[A-Z]{3}$/.test(tempValue)) {
+    //              tempValue += char;
+    //         }
+    //         else if (currentLength === 4 && /[A-Z]/.test(char) && /^[A-Z]{3}\d$/.test(tempValue)) {
+    //              tempValue += char;
+    //         }
             
-            else if (currentLength === 5 && /\d/.test(char) && /^[A-Z]{3}\d[A-Z]$/.test(tempValue)) {
-                 tempValue += char;
-            }
+    //         else if (currentLength === 5 && /\d/.test(char) && /^[A-Z]{3}\d[A-Z]$/.test(tempValue)) {
+    //              tempValue += char;
+    //         }
             
-            else if (currentLength === 6 && /\d/.test(char) && /^[A-Z]{3}\d[A-Z]\d$/.test(tempValue)) {
-                 tempValue += char;
-            } else {
-                if (originalCursorPosition > i && tempValue.length < 7) newCursorPosition--; // Apenas ajusta se não estiver no limite
-            }
-        }
-    }
-    processedValue = tempValue;
+    //         else if (currentLength === 6 && /\d/.test(char) && /^[A-Z]{3}\d[A-Z]\d$/.test(tempValue)) {
+    //              tempValue += char;
+    //         } else {
+    //             if (originalCursorPosition > i && tempValue.length < 7) newCursorPosition--; // Apenas ajusta se não estiver no limite
+    //         }
+    //     }
+    // }
+    // processedValue = tempValue;
 
-    // Limita o tamanho máximo
-    if (processedValue.includes('-')) {
-        if (processedValue.length > 8) processedValue = processedValue.substring(0, 8); // LLL-NNNN
-    } else {
-        if (processedValue.length > 7) processedValue = processedValue.substring(0, 7); // LLLNLNN
-    }
+    // // Limita o tamanho máximo
+    // if (processedValue.includes('-')) {
+    //     if (processedValue.length > 8) processedValue = processedValue.substring(0, 8); // LLL-NNNN
+    // } else {
+    //     if (processedValue.length > 7) processedValue = processedValue.substring(0, 7); // LLLNLNN
+    // }
 
-    if (e.target.value !== processedValue) {
-        e.target.value = processedValue;
-        // Tenta restaurar a posição do cursor de forma inteligente
-        if (value.length > e.target.value.length && originalCursorPosition > processedValue.length) {
-             e.target.setSelectionRange(processedValue.length, processedValue.length);
-        } else {
-             e.target.setSelectionRange(newCursorPosition, newCursorPosition);
-        }
-    }
+    // if (e.target.value !== processedValue) {
+    //     e.target.value = processedValue;
+    //     // Tenta restaurar a posição do cursor de forma inteligente
+    //     if (value.length > e.target.value.length && originalCursorPosition > processedValue.length) {
+    //          e.target.setSelectionRange(processedValue.length, processedValue.length);
+    //     } else {
+    //          e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+    //     }
+    // }
   });
 
   document.getElementById("btn-fechar").onclick = () => {
@@ -378,9 +370,18 @@ document.getElementById("forms").addEventListener("submit", function (event) {
     return;
   }
 
-  if(placa == "LUIS"){
+  if(placa == "LUISA"){
     document.getElementById("popup-textRepetido").innerHTML = `
     <iframe width="560" height="315" src="https://www.youtube.com/embed/gvXE17Zsg60?si=PvjpnIQDN7juoVB-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    `
+    document.getElementById("popupRepetido").classList.remove("hidden");
+    placaInput.focus();
+    return;
+  }
+
+  if(placa == "LUISE"){
+    document.getElementById("popup-textRepetido").innerHTML = `
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/A7x-la2AbjE?si=GxP_0XHXZBXYnA8n" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     `
     document.getElementById("popupRepetido").classList.remove("hidden");
     placaInput.focus();
