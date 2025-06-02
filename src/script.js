@@ -36,7 +36,14 @@ window.onload = function () {
     let processedValue = "";
 
     
-    
+    if (value.length === 4 && value[3] !== '-' &&
+        /^[A-Z]{3}$/.test(value.substring(0, 3)) &&
+        /^\d$/.test(value[3])) {
+      value = value.substring(0, 3) + '-' + value[3];
+      if (originalCursorPosition === 4) {
+        newCursorPosition = 5; // Pula o hífen
+      }
+    }
 
     let tempValue = "";
     for (let i = 0; i < value.length; i++) {
@@ -361,25 +368,6 @@ document.getElementById("forms").addEventListener("submit", function (event) {
   const placaInput = document.getElementById("placa");
   const placa = placaInput.value.trim().toUpperCase();
   if (!placa) return;
-  console.log(placa);
-
-  if(placa == "RYAN"){
-    document.getElementById("popup-textRepetido").innerHTML = `
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/9J62hGda9BQ?si=mEfDB5FfLSHEFPIN&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    `
-    document.getElementById("popupRepetido").classList.remove("hidden");
-    placaInput.focus();
-    return;
-  }
-
-  if(placa == "LUIS"){
-    document.getElementById("popup-textRepetido").innerHTML = `
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/gvXE17Zsg60?si=PvjpnIQDN7juoVB-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    `
-    document.getElementById("popupRepetido").classList.remove("hidden");
-    placaInput.focus();
-    return;
-  }
 
   if (!placaValidaSudeste(placa)) {
     document.getElementById("popup-textRepetido").innerHTML = `
@@ -387,10 +375,10 @@ document.getElementById("forms").addEventListener("submit", function (event) {
       Por favor, insira uma placa no formato antigo (Ex: ABC-1234)<br>
       ou Mercosul (Ex: ABC1D23).<br><br>
       <em>"Essa placa não parece correta, chefe."</em><br>
-      Essa fita ai não ta correta não bigode, bota uma placa válida ai tio!!!<br>
+       Bota uma placa válida ai tio!!!<br>
       <br>
       <br>
-      <strong>Aqui é so na cariocagem</strong>
+      <strong>Aqui é so RJ, SP, Es</strong>
     `;
     document.getElementById("popupRepetido").classList.remove("hidden");
     placaInput.focus();
@@ -457,7 +445,7 @@ document.getElementById("forms").addEventListener("submit", function (event) {
     const tempoEstacionadoFormatado = `${formatPermanencia(permanenciaH)}h ${formatPermanencia(permanenciaM)}m ${formatPermanencia(permanenciaS)}s`;
 
     let preco = 0;
-    if (diffMin > 14) {
+    if (diffMin > 15) {
       const horasFracionadas = diffMin / 60.0;
       const horasCobradas = Math.ceil(horasFracionadas);
       preco = 10;
@@ -816,7 +804,106 @@ function placaValidaSudeste(placaInput){
     "GIW", "GIX", "GIY", "GIZ", "GJA", "GJB", "GJC", "GJD", "GJE", "GJF", "GJG", "GJH", "GJI", "GJJ", "GJK", 
     "GJL", "GJM", "GJN", "GJO", "GJP", "GJQ", "GJR", "GJS", "GJT", "GJU", "GJV", "GJW", "GJX", "GJY", "GJZ", 
     "GKA", "GKB", "GKC", "GKD", "GKE", "GKF", "GKG", "GKH", "GKI", 
-    "QSN", "QSO", "QSP", "QSQ", "QSR", "QSS", "QST", "QSU", "QSV", "QSW", "QSX", "QSY", "QSZ",  
+    "QSN", "QSO", "QSP", "QSQ", "QSR", "QSS", "QST", "QSU", "QSV", "QSW", "QSX", "QSY", "QSZ", 
+    // Minas Gerais (MG) - Total: 1390 prefixos
+    "GKJ", "GKK", "GKL", "GKM", "GKN", "GKO", "GKP", "GKQ", "GKR", "GKS", "GKT", "GKU", "GKV", "GKW", "GKX", 
+    "GKY", "GKZ", "GLA", "GLB", "GLC", "GLD", "GLE", "GLF", "GLG", "GLH", "GLI", "GLJ", "GLK", "GLL", "GLM", 
+    "GLN", "GLO", "GLP", "GLQ", "GLR", "GLS", "GLT", "GLU", "GLV", "GLW", "GLX", "GLY", "GLZ", "GMA", "GMB", 
+    "GMC", "GMD", "GME", "GMF", "GMG", "GMH", "GMI", "GMJ", "GMK", "GML", "GMM", "GMN", "GMO", "GMP", "GMQ", 
+    "GMR", "GMS", "GMT", "GMU", "GMV", "GMW", "GMX", "GMY", "GMZ", "GNA", "GNB", "GNC", "GND", "GNE", "GNF", 
+    "GNG", "GNH", "GNI", "GNJ", "GNK", "GNL", "GNM", "GNN", "GNO", "GNP", "GNQ", "GNR", "GNS", "GNT", "GNU", 
+    "GNV", "GNW", "GNX", "GNY", "GNZ", "GOA", "GOB", "GOC", "GOD", "GOE", "GOF", "GOG", "GOH", "GOI", "GOJ", 
+    "GOK", "GOL", "GOM", "GON", "GOO", "GOP", "GOQ", "GOR", "GOS", "GOT", "GOU", "GOV", "GOW", "GOX", "GOY", 
+    "GOZ", "GPA", "GPB", "GPC", "GPD", "GPE", "GPF", "GPG", "GPH", "GPI", "GPJ", "GPK", "GPL", "GPM", "GPN", 
+    "GPO", "GPP", "GPQ", "GPR", "GPS", "GPT", "GPU", "GPV", "GPW", "GPX", "GPY", "GPZ", "GQA", "GQB", "GQC", 
+    "GQD", "GQE", "GQF", "GQG", "GQH", "GQI", "GQJ", "GQK", "GQL", "GQM", "GQN", "GQO", "GQP", "GQQ", "GQR", 
+    "GQS", "GQT", "GQU", "GQV", "GQW", "GQX", "GQY", "GQZ", "GRA", "GRB", "GRC", "GRD", "GRE", "GRF", "GRG", 
+    "GRH", "GRI", "GRJ", "GRK", "GRL", "GRM", "GRN", "GRO", "GRP", "GRQ", "GRR", "GRS", "GRT", "GRU", "GRV", 
+    "GRW", "GRX", "GRY", "GRZ", "GSA", "GSB", "GSC", "GSD", "GSE", "GSF", "GSG", "GSH", "GSI", "GSJ", "GSK", 
+    "GSL", "GSM", "GSN", "GSO", "GSP", "GSQ", "GSR", "GSS", "GST", "GSU", "GSV", "GSW", "GSX", "GSY", "GSZ", 
+    "GTA", "GTB", "GTC", "GTD", "GTE", "GTF", "GTG", "GTH", "GTI", "GTJ", "GTK", "GTL", "GTM", "GTN", "GTO", 
+    "GTP", "GTQ", "GTR", "GTS", "GTT", "GTU", "GTV", "GTW", "GTX", "GTY", "GTZ", "GUA", "GUB", "GUC", "GUD", 
+    "GUE", "GUF", "GUG", "GUH", "GUI", "GUJ", "GUK", "GUL", "GUM", "GUN", "GUO", "GUP", "GUQ", "GUR", "GUS", 
+    "GUT", "GUU", "GUV", "GUW", "GUX", "GUY", "GUZ", "GVA", "GVB", "GVC", "GVD", "GVE", "GVF", "GVG", "GVH", 
+    "GVI", "GVJ", "GVK", "GVL", "GVM", "GVN", "GVO", "GVP", "GVQ", "GVR", "GVS", "GVT", "GVU", "GVV", "GVW", 
+    "GVX", "GVY", "GVZ", "GWA", "GWB", "GWC", "GWD", "GWE", "GWF", "GWG", "GWH", "GWI", "GWJ", "GWK", "GWL", 
+    "GWM", "GWN", "GWO", "GWP", "GWQ", "GWR", "GWS", "GWT", "GWU", "GWV", "GWW", "GWX", "GWY", "GWZ", "GXA", 
+    "GXB", "GXC", "GXD", "GXE", "GXF", "GXG", "GXH", "GXI", "GXJ", "GXK", "GXL", "GXM", "GXN", "GXO", "GXP", 
+    "GXQ", "GXR", "GXS", "GXT", "GXU", "GXV", "GXW", "GXX", "GXY", "GXZ", "GYA", "GYB", "GYC", "GYD", "GYE", 
+    "GYF", "GYG", "GYH", "GYI", "GYJ", "GYK", "GYL", "GYM", "GYN", "GYO", "GYP", "GYQ", "GYR", "GYS", "GYT", 
+    "GYU", "GYV", "GYW", "GYX", "GYY", "GYZ", "GZA", "GZB", "GZC", "GZD", "GZE", "GZF", "GZG", "GZH", "GZI", 
+    "GZJ", "GZK", "GZL", "GZM", "GZN", "GZO", "GZP", "GZQ", "GZR", "GZS", "GZT", "GZU", "GZV", "GZW", "GZX", 
+    "GZY", "GZZ", "HAA", "HAB", "HAC", "HAD", "HAE", "HAF", "HAG", "HAH", "HAI", "HAJ", "HAK", "HAL", "HAM", 
+    "HAN", "HAO", "HAP", "HAQ", "HAR", "HAS", "HAT", "HAU", "HAV", "HAW", "HAX", "HAY", "HAZ", "HBA", "HBB", 
+    "HBC", "HBD", "HBE", "HBF", "HBG", "HBH", "HBI", "HBJ", "HBK", "HBL", "HBM", "HBN", "HBO", "HBP", "HBQ", 
+    "HBR", "HBS", "HBT", "HBU", "HBV", "HBW", "HBX", "HBY", "HBZ", "HCA", "HCB", "HCC", "HCD", "HCE", "HCF", 
+    "HCG", "HCH", "HCI", "HCJ", "HCK", "HCL", "HCM", "HCN", "HCO", "HCP", "HCQ", "HCR", "HCS", "HCT", "HCU", 
+    "HCV", "HCW", "HCX", "HCY", "HCZ", "HDA", "HDB", "HDC", "HDD", "HDE", "HDF", "HDG", "HDH", "HDI", "HDJ", 
+    "HDK", "HDL", "HDM", "HDN", "HDO", "HDP", "HDQ", "HDR", "HDS", "HDT", "HDU", "HDV", "HDW", "HDX", "HDY", 
+    "HDZ", "HEA", "HEB", "HEC", "HED", "HEE", "HEF", "HEG", "HEH", "HEI", "HEJ", "HEK", "HEL", "HEM", "HEN", 
+    "HEO", "HEP", "HEQ", "HER", "HES", "HET", "HEU", "HEV", "HEW", "HEX", "HEY", "HEZ", "HFA", "HFB", "HFC", 
+    "HFD", "HFE", "HFF", "HFG", "HFH", "HFI", "HFJ", "HFK", "HFL", "HFM", "HFN", "HFO", "HFP", "HFQ", "HFR", 
+    "HFS", "HFT", "HFU", "HFV", "HFW", "HFX", "HFY", "HFZ", "HGA", "HGB", "HGC", "HGD", "HGE", "HGF", "HGG", 
+    "HGH", "HGI", "HGJ", "HGK", "HGL", "HGM", "HGN", "HGO", "HGP", "HGQ", "HGR", "HGS", "HGT", "HGU", "HGV", 
+    "HGW", "HGX", "HGY", "HGZ", "HHA", "HHB", "HHC", "HHD", "HHE", "HHF", "HHG", "HHH", "HHI", "HHJ", "HHK", 
+    "HHL", "HHM", "HHN", "HHO", "HHP", "HHQ", "HHR", "HHS", "HHT", "HHU", "HHV", "HHW", "HHX", "HHY", "HHZ", 
+    "HIA", "HIB", "HIC", "HID", "HIE", "HIF", "HIG", "HIH", "HII", "HIJ", "HIK", "HIL", "HIM", "HIN", "HIO", 
+    "HIP", "HIQ", "HIR", "HIS", "HIT", "HIU", "HIV", "HIW", "HIX", "HIY", "HIZ", "HJA", "HJB", "HJC", "HJD", 
+    "HJE", "HJF", "HJG", "HJH", "HJI", "HJJ", "HJK", "HJL", "HJM", "HJN", "HJO", "HJP", "HJQ", "HJR", "HJS", 
+    "HJT", "HJU", "HJV", "HJW", "HJX", "HJY", "HJZ", "HKA", "HKB", "HKC", "HKD", "HKE", "HKF", "HKG", "HKH", 
+    "HKI", "HKJ", "HKK", "HKL", "HKM", "HKN", "HKO", "HKP", "HKQ", "HKR", "HKS", "HKT", "HKU", "HKV", "HKW", 
+    "HKX", "HKY", "HKZ", "HLA", "HLB", "HLC", "HLD", "HLE", "HLF", "HLG", "HLH", "HLI", "HLJ", "HLK", "HLL", 
+    "HLM", "HLN", "HLO", "HLP", "HLQ", "HLR", "HLS", "HLT", "HLU", "HLV", "HLW", "HLX", "HLY", "HLZ", "HMA", 
+    "HMB", "HMC", "HMD", "HME", "HMF", "HMG", "HMH", "HMI", "HMJ", "HMK", "HML", "HMM", "HMN", "HMO", "HMP", 
+    "HMQ", "HMR", "HMS", "HMT", "HMU", "HMV", "HMW", "HMX", "HMY", "HMZ", "HNA", "HNB", "HNC", "HND", "HNE", 
+    "HNF", "HNG", "HNH", "HNI", "HNJ", "HNK", "HNL", "HNM", "HNN", "HNO", "HNP", "HNQ", "HNR", "HNS", "HNT", 
+    "HNU", "HNV", "HNW", "HNX", "HNY", "HNZ", "HOA", "HOB", "HOC", "HOD", "HOE", "HOF", "HOG", "HOH", "HOI", 
+    "HOJ", "HOK", 
+    "NXX", "NXY", "NXZ", "NYA", "NYB", "NYC", "NYD", "NYE", "NYF", "NYG", 
+    "OLO", "OLP", "OLQ", "OLR", "OLS", "OLT", "OLU", "OLV", "OLW", "OLX", "OLY", "OLZ", "OMA", "OMB", "OMC", 
+    "OMD", "OME", "OMF", "OMG", "OMH", 
+    "OOV", "OOW", "OOX", "OOY", "OOZ", "OPA", "OPB", "OPC", "OPD", "OPE", "OPF", "OPG", "OPH", "OPI", "OPJ", 
+    "OPK", "OPL", "OPM", "OPN", "OPO", "OPP", "OPQ", "OPR", "OPS", "OPT", "OPU", "OPV", "OPW", "OPX", "OPY", 
+    "OPZ", "OQA", "OQB", "OQC", "OQD", "OQE", "OQF", "OQG", "OQH", "OQI", "OQJ", "OQK", "OQL", "OQM", "OQN", 
+    "OQO", "OQP", "OQQ", "OQR", "OQS", "OQT", "OQU", "OQV", "OQW", "OQX", "OQY", "OQZ", "ORA", "ORB", "ORC", 
+    "OWH", "OWI", "OWJ", "OWK", "OWL", "OWM", "OWN", "OWO", "OWP", "OWQ", "OWR", "OWS", "OWT", "OWU", "OWV", 
+    "OWW", "OWX", "OWY", "OWZ", "OXA", "OXB", "OXC", "OXD", "OXE", "OXF", "OXG", "OXH", "OXI", "OXJ", "OXK", 
+    "PUA", "PUB", "PUC", "PUD", "PUE", "PUF", "PUG", "PUH", "PUI", "PUJ", "PUK", "PUL", "PUM", "PUN", "PUO", 
+    "PUP", "PUQ", "PUR", "PUS", "PUT", "PUU", "PUV", "PUW", "PUX", "PUY", "PUZ", "PVA", "PVB", "PVC", "PVD", 
+    "PVE", "PVF", "PVG", "PVH", "PVI", "PVJ", "PVK", "PVL", "PVM", "PVN", "PVO", "PVP", "PVQ", "PVR", "PVS", 
+    "PVT", "PVU", "PVV", "PVW", "PVX", "PVY", "PVZ", "PWA", "PWB", "PWC", "PWD", "PWE", "PWF", "PWG", "PWH", 
+    "PWI", "PWJ", "PWK", "PWL", "PWM", "PWN", "PWO", "PWP", "PWQ", "PWR", "PWS", "PWT", "PWU", "PWV", "PWW", 
+    "PWX", "PWY", "PWZ", "PXA", "PXB", "PXC", "PXD", "PXE", "PXF", "PXG", "PXH", "PXI", "PXJ", "PXK", "PXL", 
+    "PXM", "PXN", "PXO", "PXP", "PXQ", "PXR", "PXS", "PXT", "PXU", "PXV", "PXW", "PXX", "PXY", "PXZ", "PYA", 
+    "PYB", "PYC", "PYD", "PYE", "PYF", "PYG", "PYH", "PYI", "PYJ", "PYK", "PYL", "PYM", "PYN", "PYO", "PYP", 
+    "PYQ", "PYR", "PYS", "PYT", "PYU", "PYV", "PYW", "PYX", "PYY", "PYZ", "PZA", "PZB", "PZC", "PZD", "PZE", 
+    "PZF", "PZG", "PZH", "PZI", "PZJ", "PZK", "PZL", "PZM", "PZN", "PZO", "PZP", "PZQ", "PZR", "PZS", "PZT", 
+    "PZU", "PZV", "PZW", "PZX", "PZY", "PZZ", 
+    "QMQ", "QMR", "QMS", "QMT", "QMU", "QMV", "QMW", "QMX", "QMY", "QMZ", "QNA", "QNB", "QNC", "QND", "QNE", 
+    "QNF", "QNG", "QNH", "QNI", "QNJ", "QNK", "QNL", "QNM", "QNN", "QNO", "QNP", "QNQ", "QNR", "QNS", "QNT", 
+    "QNU", "QNV", "QNW", "QNX", "QNY", "QNZ", "QOA", "QOB", "QOC", "QOD", "QOE", "QOF", "QOG", "QOH", "QOI", 
+    "QOJ", "QOK", "QOL", "QOM", "QON", "QOO", "QOP", "QOQ", "QOR", "QOS", "QOT", "QOU", "QOV", "QOW", "QOX", 
+    "QOY", "QOZ", "QPA", "QPB", "QPC", "QPD", "QPE", "QPF", "QPG", "QPH", "QPI", "QPJ", "QPK", "QPL", "QPM", 
+    "QPN", "QPO", "QPP", "QPQ", "QPR", "QPS", "QPT", "QPU", "QPV", "QPW", "QPX", "QPY", "QPZ", "QQA", "QQB", 
+    "QQC", "QQD", "QQE", "QQF", "QQG", "QQH", "QQI", "QQJ", "QQK", "QQL", "QQM", "QQN", "QQO", "QQP", "QQQ", 
+    "QQR", "QQS", "QQT", "QQU", "QQV", "QQW", "QQX", "QQY", "QQZ", 
+    "QUA", "QUB", "QUC", "QUD", "QUE", "QUF", "QUG", "QUH", "QUI", "QUJ", "QUK", "QUL", "QUM", "QUN", "QUO", 
+    "QUP", "QUQ", "QUR", "QUS", "QUT", "QUU", "QUV", "QUW", "QUX", "QUY", "QUZ", 
+    "QWR", "QWS", "QWT", "QWU", "QWV", "QWW", "QWX", "QWY", "QWZ", "QXA", "QXB", "QXC", "QXD", "QXE", "QXF", 
+    "QXG", "QXH", "QXI", "QXJ", "QXK", "QXL", "QXM", "QXN", "QXO", "QXP", "QXQ", "QXR", "QXS", "QXT", "QXU", 
+    "QXV", "QXW", "QXX", "QXY", "QXZ", 
+    "RFA", "RFB", "RFC", "RFD", "RFE", "RFF", "RFG", "RFH", "RFI", "RFJ", "RFK", "RFL", "RFM", "RFN", "RFO", 
+    "RFP", "RFQ", "RFR", "RFS", "RFT", "RFU", "RFV", "RFW", "RFX", "RFY", "RFZ", "RGA", "RGB", "RGC", "RGD", 
+    "RMD", "RME", "RMF", "RMG", "RMH", "RMI", "RMJ", "RMK", "RML", "RMM", "RMN", "RMO", "RMP", "RMQ", "RMR", 
+    "RMS", "RMT", "RMU", "RMV", "RMW", "RMX", "RMY", "RMZ", "RNA", "RNB", "RNC", "RND", "RNE", "RNF", "RNG", 
+    "RNH", "RNI", "RNJ", "RNK", "RNL", "RNM", "RNN", "RNO", "RNP", "RNQ", "RNR", "RNS", "RNT", "RNU", "RNV", 
+    "RNW", "RNX", "RNY", "RNZ", 
+    "RTA", "RTB", "RTC", "RTD", "RTE", "RTF", "RTG", "RTH", "RTI", "RTJ", "RTK", "RTL", "RTM", "RTN", "RTO", 
+    "RTP", "RTQ", "RTR", "RTS", "RTT", "RTU", "RTV", "RTW", "RTX", "RTY", "RTZ", "RUA", "RUB", "RUC", "RUD", 
+    "RUE", "RUF", "RUG", "RUH", "RUI", "RUJ", "RUK", "RUL", "RUM", "RUN", "RUO", "RUP", "RUQ", "RUR", "RUS", 
+    "RUT", "RUU", "RUV", "RUW", "RUX", "RUY", "RUZ", "RVA", "RVB", "RVC", "RVD", "RVE", "RVF", "RVG", "RVH", 
+    "RVI", "RVJ", "RVK", "RVL", "RVM", "RVN", "RVO", "RVP", "RVQ", "RVR", "RVS", "RVT", "RVU", "RVV", "RVW", 
+    "RVX", "RVY", "RVZ", 
     // Rio de Janeiro (RJ) - Total: 970 prefixos
     "KMF", "KMG", "KMH", "KMI", "KMJ", "KMK", "KML", "KMM", "KMN", "KMO", "KMP", "KMQ", "KMR", "KMS", "KMT", 
     "KMU", "KMV", "KMW", "KMX", "KMY", "KMZ", "KNA", "KNB", "KNC", "KND", "KNE", "KNF", "KNG", "KNH", "KNI", 
@@ -905,6 +992,14 @@ function placaValidaSudeste(placaInput){
     "RBA", "RBB", "RBC", "RBD", "RBE", "RBF", "RBG", "RBH", "RBI", "RBJ", 
     "RQM", "RQN", "RQO", "RQP", "RQQ", "RQR", "RQS", "RQT", "RQU", "RQV"
 ];
+
+
+
+
+
+
+
+
 
     if (!prefixosSudeste.includes(primeirasTresLetras)) {
         return false;
