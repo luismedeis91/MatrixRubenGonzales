@@ -466,9 +466,11 @@ document.getElementById("forms").addEventListener("submit", function (event) {
     if (diffMin > 15) {
       const horasFracionadas = diffMin / 60.0;
       const horasCobradas = Math.ceil(horasFracionadas);
-      preco = 10;
-      if (horasCobradas > 1) {
-        preco += (horasCobradas - 1) * 2;
+          if (horasCobradas <= 3) {
+        preco = 10;
+      } else {
+        const horasExtras = horasCobradas - 3;
+        preco = 10 + horasExtras * 2;
       }
     }
 
@@ -509,9 +511,12 @@ document.getElementById("btn-retirar").onclick = () => {
     if (diffMin > 15) {
       const horasFracionadas = diffMin / 60.0;
       const horasCobradas = Math.ceil(horasFracionadas);
-      preco = 10;
-      if (horasCobradas > 1) {
-        preco += (horasCobradas - 1) * 2;
+
+      if (horasCobradas <= 3) {
+        preco = 10; // valor fixo até 3 horas
+      } else {
+        const horasExtras = horasCobradas - 3;
+        preco = 10 + horasExtras * 2; // R$10 até 3h + R$2 por cada hora extra
       }
     }
 
