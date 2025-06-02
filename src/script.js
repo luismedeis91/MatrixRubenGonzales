@@ -361,9 +361,18 @@ document.getElementById("forms").addEventListener("submit", function (event) {
   const placa = placaInput.value.trim().toUpperCase();
   if (!placa) return;
   
-  if(placa == "RYAN"){
+  if(placa == "NYAN"){
     document.getElementById("popup-textRepetido").innerHTML = `
     <iframe width="560" height="315" src="https://www.youtube.com/embed/9J62hGda9BQ?si=mEfDB5FfLSHEFPIN&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    `
+    document.getElementById("popupRepetido").classList.remove("hidden");
+    placaInput.focus();
+    return;
+  }
+
+  if(placa == "RYAN"){
+    document.getElementById("popup-textRepetido").innerHTML = `
+    <iframe width="560" height="315" src="https://classic.minecraft.net/" frameborder="0" allowfullscreen></iframe>
     `
     document.getElementById("popupRepetido").classList.remove("hidden");
     placaInput.focus();
