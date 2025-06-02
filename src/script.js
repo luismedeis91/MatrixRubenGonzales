@@ -463,7 +463,7 @@ document.getElementById("forms").addEventListener("submit", function (event) {
     const tempoEstacionadoFormatado = `${formatPermanencia(permanenciaH)}h ${formatPermanencia(permanenciaM)}m ${formatPermanencia(permanenciaS)}s`;
 
     let preco = 0;
-    if (diffMin > 15) {
+    if (diffMin > 14) {
       const horasFracionadas = diffMin / 60.0;
       const horasCobradas = Math.ceil(horasFracionadas);
           if (horasCobradas <= 3) {
@@ -508,15 +508,15 @@ document.getElementById("btn-retirar").onclick = () => {
     const diffMin = Math.floor(diffTotalSegundos / 60);
 
     let preco = 0;
-    if (diffMin > 15) {
+    if (diffMin > 14) {
       const horasFracionadas = diffMin / 60.0;
       const horasCobradas = Math.ceil(horasFracionadas);
 
       if (horasCobradas <= 3) {
-        preco = 10; // valor fixo até 3 horas
+        preco = 10;
       } else {
         const horasExtras = horasCobradas - 3;
-        preco = 10 + horasExtras * 2; // R$10 até 3h + R$2 por cada hora extra
+        preco = 10 + horasExtras * 2;
       }
     }
 
