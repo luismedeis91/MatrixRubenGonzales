@@ -397,6 +397,42 @@ document.getElementById("forms").addEventListener("submit", function (event) {
     return;
   }
 
+  if(placa == "CADU"){
+    document.getElementById("popup-textRepetido").innerHTML = `
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=7OrpvUJ6xWcec-Dv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    `
+    document.getElementById("popupRepetido").classList.remove("hidden");
+    placaInput.focus();
+    return;
+  }
+
+  if(placa == "THEO"){
+    document.getElementById("popup-textRepetido").innerHTML = `
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/9K3kdvHxcdA?si=_B_uGBVRNLe7OqhF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    `
+    document.getElementById("popupRepetido").classList.remove("hidden");
+    placaInput.focus();
+    return;
+  }
+
+  if(placa == "VIVI"){
+    document.getElementById("popup-textRepetido").innerHTML = `
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/xa1Zn6XrDlM?si=il73xyO05NLSZ1W5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    `
+    document.getElementById("popupRepetido").classList.remove("hidden");
+    placaInput.focus();
+    return;
+  }
+
+  if(placa == "RUBENS"){
+    document.getElementById("popup-textRepetido").innerHTML = `
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/YbW4fOeCjXc?si=7OKLj3Sg_u9zINtt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    `
+    document.getElementById("popupRepetido").classList.remove("hidden");
+    placaInput.focus();
+    return;
+  }
+
   if (!placaValidaSudeste(placa)) {
     document.getElementById("popup-textRepetido").innerHTML = `
       <strong>Formato de placa inválido!</strong><br><br>
