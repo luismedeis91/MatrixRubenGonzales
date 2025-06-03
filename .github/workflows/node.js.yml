@@ -37,8 +37,6 @@ jobs:
         run: npm install
       - name: Grant permission to parcel
         run: chmod +x ./node_modules/.bin/parcel
-      - name: Parcel Build
-        run: parcel build src/index.html
       - name: Build app
         run: npm run build
       - name: Setup Pages
