@@ -35,8 +35,8 @@ jobs:
         uses: actions/setup-node@v4
       - name: Install dependencies
         run: npm install
-      - name: Grant permission to vite
-        run: chmod +x ./node_modules/.bin/vite
+      - name: Grant permission to parcel
+        run: chmod +x ./node_modules/.bin/parcel
       - name: Build app
         run: npm run build
       - name: Setup Pages
